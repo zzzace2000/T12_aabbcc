@@ -1,8 +1,5 @@
-<<<<<<< HEAD
 as1d32as1d32as123d1a2s3d
 adasdasdsadasdasdasd
-
+asdasd
 
 1231as32d123as1d23asd
-=======
->>>>>>> parent of 234798f... test 3
