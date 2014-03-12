@@ -10,7 +10,6 @@ public class cServer {
 	static int port = 9997;
 
 	ServerSocket ss;
-	Socket theSocket;
 	Vector<conn_thread> conn_client;
 	
 	public cServer() {
@@ -20,6 +19,7 @@ public class cServer {
 			
 			while(true) {
 				
+				Socket theSocket;
 				synchronized (this) {
 					theSocket = ss.accept();
 				}
