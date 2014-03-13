@@ -33,6 +33,8 @@ import java.awt.CardLayout;
 
 import javax.swing.GroupLayout.Alignment;
 
+import conn.cClient;
+
 import java.awt.Component;
 
 public class mainFram extends JFrame {
@@ -41,11 +43,12 @@ public class mainFram extends JFrame {
 	private JTextField textField_2;
 	private JButton btnNewButton_1;
 	private JTabbedPane tabbedPane;
+	private cClient theClient;
 
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -56,12 +59,14 @@ public class mainFram extends JFrame {
 				}
 			}
 		});
-	}
+	}*/
 
 	/**
 	 * Create the frame.
 	 */
-	public mainFram() {
+	public mainFram(cClient tc) {
+		
+		theClient = tc;
 		setIconImage(Toolkit.getDefaultToolkit().getImage(mainFram.class.getResource("/Icon/1394654416_MESSAGES.png")));
 		setTitle("NMLAB 網多戰隊-team12 聊天室");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -108,7 +113,9 @@ public class mainFram extends JFrame {
 		JButton btnNewButton = new JButton("");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Object[] connection = new conDialog().showDialog(mainFram.this, "連線");
+				String[] connection = (String[]) new conDialog().showDialog(mainFram.this, "連線");
+
+				theClient.connectToServer(connection[0], Integer.parseInt((String) connection[1]), connection[2]);
 			}
 		});
 		btnNewButton.setIcon(new ImageIcon(mainFram.class.getResource("/Icon/connection.png")));
@@ -201,7 +208,11 @@ public class mainFram extends JFrame {
 		
 		textField_2.addKeyListener(new checktypeListener());
 	}
-
+	
+	public void showMsg(String msg) {
+		System.out.println(msg);
+	}
+	
 	class checktypeListener extends KeyAdapter{
 		public void keyReleased(KeyEvent e){
 			if(textField_2.getText().length() != 0)

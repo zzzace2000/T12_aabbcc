@@ -7,7 +7,7 @@ import java.util.Vector;
 
 public class cServer {
 	
-	static int port = 9997;
+	static int port = 5001;
 
 	ServerSocket ss;
 	Vector<conn_thread> conn_client;

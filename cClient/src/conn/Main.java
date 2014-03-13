@@ -9,7 +9,7 @@ public class Main {
 		
 		cClient theClient = new cClient();
 		
-		theClient.connectToServer();
+		//theClient.connectToServer();
 		
 		
 	}
