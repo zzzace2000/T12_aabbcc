@@ -89,11 +89,11 @@ public class conDialog extends JDialog {
 		contentPanel.add(lblIp);
 	}
 	
-	public Object[] getValues(){
-		return values.toArray();
+	public Vector getValues(){
+		return values;
 	}
 	
-	public Object[] showDialog(JFrame parent, String title){
+	public Vector showDialog(JFrame parent, String title){
 		conDialog tmp = new conDialog(parent, title);
 		tmp.setVisible(true);
 		return tmp.getValues();

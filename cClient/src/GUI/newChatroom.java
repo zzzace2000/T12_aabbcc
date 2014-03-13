@@ -24,6 +24,7 @@ public class newChatroom extends JDialog {
 	private JTextField textField;
 	private JTable table;
 	private Vector values = new Vector();
+	private JLabel lblNewLabel;
 
 	/**
 	 * Create the dialog.
@@ -34,7 +35,7 @@ public class newChatroom extends JDialog {
 		setAlwaysOnTop(true);
 		setTitle("create new chat room");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(newChatroom.class.getResource("/Icon/Chattmp.png")));
-		setBounds(100, 100, 416, 267);
+		setBounds(100, 100, 416, 295);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -69,11 +70,7 @@ public class newChatroom extends JDialog {
 		scrollPane.setViewportView(table);
 		
 		JButton btnNewButton_2 = new JButton("Create");
-		btnNewButton_2.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				setVisible(false);
-			}
-		});
+		btnNewButton_2.addActionListener(new addListener());
 		btnNewButton_2.setIcon(new ImageIcon(newChatroom.class.getResource("/Icon/addChatroom.png")));
 		btnNewButton_2.setBounds(236, 31, 154, 87);
 		contentPanel.add(btnNewButton_2);
@@ -81,21 +78,46 @@ public class newChatroom extends JDialog {
 		JButton btnNewButton_3 = new JButton("Cancel");
 		btnNewButton_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				setVisible(false);
+				dispose();
 			}
 		});
 		btnNewButton_3.setIcon(new ImageIcon(newChatroom.class.getResource("/Icon/cancelchat.png")));
 		btnNewButton_3.setBounds(236, 128, 154, 87);
 		contentPanel.add(btnNewButton_3);
+		
+		lblNewLabel = new JLabel();
+		lblNewLabel.setBounds(10, 224, 380, 23);
+		contentPanel.add(lblNewLabel);
 	}
 	
-	public Object[] getValues(){
-		return values.toArray();
+	public Vector getValues(){
+		return values;
 	}
 	
-	public Object[] showDialog(JFrame parent, String title){
+	public Vector showDialog(JFrame parent, String title){
 		newChatroom dialog = new newChatroom(parent, title);
 		dialog.setVisible(true);
 		return dialog.getValues();
+	}
+	
+	class addListener implements ActionListener{
+		public void actionPerformed(ActionEvent arg0) {
+			if(!check()){
+				lblNewLabel.setText("Chatroom name is incorrect");
+				lblNewLabel.setIcon(new ImageIcon(newChatroom.class.getResource("/Icon/warning.png")));
+				return;
+			}
+			values.add(textField.getText());
+			setVisible(false);
+		}
+	}
+	
+	private boolean check(){
+		if(textField.getText().length() == 0) return false;
+		for(int i = 0; i < textField.getText().length(); ++i){
+			if(textField.getText() != " ")
+				return true;
+		}
+		return false;
 	}
 }

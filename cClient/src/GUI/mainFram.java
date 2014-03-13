@@ -34,6 +34,7 @@ import java.awt.CardLayout;
 import javax.swing.GroupLayout.Alignment;
 
 import java.awt.Component;
+import java.awt.event.MouseAdapter;
 
 public class mainFram extends JFrame {
 
@@ -108,9 +109,10 @@ public class mainFram extends JFrame {
 		JButton btnNewButton = new JButton("");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Object[] connection = new conDialog().showDialog(mainFram.this, "連線");
+				Vector connection = new conDialog().showDialog(mainFram.this, "連線");
 			}
 		});
+		btnNewButton.setToolTipText("連線");
 		btnNewButton.setIcon(new ImageIcon(mainFram.class.getResource("/Icon/connection.png")));
 		panel_5.add(btnNewButton);
 		
@@ -123,6 +125,7 @@ public class mainFram extends JFrame {
 		});
 		btnNewButton_3.setIcon(new ImageIcon(mainFram.class.getResource("/Icon/about.png")));
 		panel_5.add(btnNewButton_3);
+		btnNewButton_3.setToolTipText("關於");
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBounds(128, 0, 456, 362);
@@ -131,7 +134,7 @@ public class mainFram extends JFrame {
 		panel_1.setPreferredSize(new Dimension(456, 362));
 		
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.setBounds(0, 0, 458, 294);
+		tabbedPane.setBounds(0, 0, 458, 269);
 		panel_1.add(tabbedPane);
 		
 		JPanel panel_3 = new JPanel();
@@ -156,6 +159,7 @@ public class mainFram extends JFrame {
 		addpan.add(addLab);
 		tabbedPane.setTabComponentAt(tabbedPane.indexOfComponent(panel_4), addpan);
 		panel_4.setLayout(new BorderLayout(0, 0));
+		addpan.setToolTipText("開新聊天室");
 		
 		JButton btnCreatANew = new JButton("Create a new Chat room");
 		btnCreatANew.addActionListener(new addtabButton());
@@ -176,28 +180,52 @@ public class mainFram extends JFrame {
 		panel_4.add(verticalStrut_1, BorderLayout.SOUTH);
 		
 		JPanel panel_2 = new JPanel();
-		panel_2.setBounds(0, 293, 456, 69);
+		panel_2.setBounds(0, 267, 456, 95);
 		panel_1.add(panel_2);
 		panel_2.setLayout(null);
 		
 		textField_2 = new JTextField();
-		textField_2.setBounds(49, 10, 338, 49);
+		textField_2.setBounds(10, 36, 377, 49);
 		panel_2.add(textField_2);
 		textField_2.setColumns(10);
 		
 		btnNewButton_1 = new JButton("");
 		btnNewButton_1.setEnabled(false);
 		btnNewButton_1.setIcon(new ImageIcon(mainFram.class.getResource("/Icon/tosend.png")));
-		btnNewButton_1.setBounds(397, 10, 49, 49);
+		btnNewButton_1.setBounds(397, 36, 49, 49);
 		panel_2.add(btnNewButton_1);
 		
+		JComboBox comboBox = new JComboBox();
+		comboBox.setBounds(37, 9, 42, 23);
+		panel_2.add(comboBox);
+		
 		JButton btnNewButton_2 = new JButton("");
-		btnNewButton_2.setBounds(10, 10, 21, 21);
+		btnNewButton_2.setBounds(10, 9, 29, 23);
 		panel_2.add(btnNewButton_2);
 		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setBounds(10, 38, 29, 21);
-		panel_2.add(comboBox);
+		JSeparator separator = new JSeparator();
+		separator.setOrientation(SwingConstants.VERTICAL);
+		separator.setBounds(89, 11, 1, 21);
+		panel_2.add(separator);
+		
+		JButton btnNewButton_4 = new JButton("");
+		btnNewButton_4.setIcon(new ImageIcon(mainFram.class.getResource("/Icon/soundicon.png")));
+		btnNewButton_4.setBounds(100, 9, 29, 23);
+		panel_2.add(btnNewButton_4);
+		
+		JButton button = new JButton("");
+		button.setIcon(new ImageIcon(mainFram.class.getResource("/Icon/mic.png")));
+		button.setBounds(128, 9, 29, 23);
+		panel_2.add(button);
+		
+		JSeparator separator_1 = new JSeparator();
+		separator_1.setOrientation(SwingConstants.VERTICAL);
+		separator_1.setBounds(167, 11, 1, 21);
+		panel_2.add(separator_1);
+		
+		JComboBox comboBox_1 = new JComboBox();
+		comboBox_1.setBounds(178, 9, 144, 23);
+		panel_2.add(comboBox_1);
 		
 		textField_2.addKeyListener(new checktypeListener());
 	}
@@ -231,9 +259,9 @@ public class mainFram extends JFrame {
 	}
 	class addtab implements MouseListener{
 		public void mouseClicked(MouseEvent e) {
-			Object[] connection = new newChatroom().showDialog(mainFram.this, "Create new room");
+			Vector connection = new newChatroom().showDialog(mainFram.this, "Create new room");
 			JPanel tmpPan = new JPanel();
-			tablabel tmp = new tablabel("test", tmpPan);
+			tablabel tmp = new tablabel((String)connection.get(0), tmpPan);
 			tabbedPane.add(tmpPan, tabbedPane.getTabCount()-1);
 			tabbedPane.setTabComponentAt(tabbedPane.indexOfComponent(tmpPan), tmp);
 		}
@@ -245,9 +273,9 @@ public class mainFram extends JFrame {
 	}
 	class addtabButton implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			Object[] connection = new newChatroom().showDialog(mainFram.this, "Create new room");
+			Vector connection = new newChatroom().showDialog(mainFram.this, "Create new room");
 			JPanel tmpPan = new JPanel();
-			tablabel tmp = new tablabel("test", tmpPan);
+			tablabel tmp = new tablabel((String)connection.get(0), tmpPan);
 			tabbedPane.add(tmpPan, tabbedPane.getTabCount()-1);
 			tabbedPane.setTabComponentAt(tabbedPane.indexOfComponent(tmpPan), tmp);
 		}
