@@ -35,6 +35,9 @@ public class conn_thread implements Runnable{
 			
 			try {
 				msg = input.readUTF();
+				
+				judge(msg);
+				
 			} catch (IOException e) {
 				
 				if (e instanceof SocketException) {
@@ -46,6 +49,10 @@ public class conn_thread implements Runnable{
 			}
 			
 		}
+	}
+	
+	public void judge(String msg) {
+		
 	}
 	
 	
