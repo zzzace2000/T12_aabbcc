@@ -22,7 +22,10 @@ public class conDialog extends JDialog {
 	private JTextField textField;
 	private JTextField textField_1;
 	private JTextField textField_2;
-	private Vector values = new Vector();
+	private Vector<String> values = new Vector<String>();
+	
+	private static String IP_ADDRESS="140.112.18.196";
+	private static int PORT = 5001;
 
 	/**
 	 * Create the dialog.
@@ -36,7 +39,7 @@ public class conDialog extends JDialog {
 		contentPanel.setLayout(null);
 		
 		textField = new JTextField();
-		textField.setText("192.168.0.1");
+		textField.setText(IP_ADDRESS);
 		textField.setBounds(10, 35, 96, 21);
 		contentPanel.add(textField);
 		textField.setColumns(10);
@@ -46,7 +49,7 @@ public class conDialog extends JDialog {
 		contentPanel.add(lblPort);
 		
 		textField_1 = new JTextField();
-		textField_1.setText("5001");
+		textField_1.setText(String.valueOf(PORT));
 		textField_1.setBounds(10, 91, 96, 21);
 		contentPanel.add(textField_1);
 		textField_1.setColumns(10);
@@ -88,11 +91,11 @@ public class conDialog extends JDialog {
 		contentPanel.add(lblIp);
 	}
 	
-	public Vector getValues(){
+	public Vector<String> getValues(){
 		return values;
 	}
 	
-	public static Vector showDialog(JFrame parent, String title){
+	public static Vector<String> showDialog(JFrame parent, String title){
 		conDialog tmp = new conDialog(parent, title);
 		tmp.setVisible(true);
 		return tmp.getValues();
