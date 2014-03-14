@@ -1,7 +1,6 @@
 package GUI;
 
 import java.awt.BorderLayout;
-import java.util.ArrayList;
 import java.util.Vector;
 import java.awt.FlowLayout;
 
@@ -23,9 +22,7 @@ public class conDialog extends JDialog {
 	private JTextField textField;
 	private JTextField textField_1;
 	private JTextField textField_2;
-	private ArrayList<String> values = new ArrayList<String>();
-	
-	private static String IP_ADDRESS = "59.115.174.238";
+	private Vector values = new Vector();
 
 	/**
 	 * Create the dialog.
@@ -39,7 +36,7 @@ public class conDialog extends JDialog {
 		contentPanel.setLayout(null);
 		
 		textField = new JTextField();
-		textField.setText(IP_ADDRESS);
+		textField.setText("192.168.0.1");
 		textField.setBounds(10, 35, 96, 21);
 		contentPanel.add(textField);
 		textField.setColumns(10);
@@ -91,15 +88,8 @@ public class conDialog extends JDialog {
 		contentPanel.add(lblIp);
 	}
 	
-<<<<<<< HEAD
 	public Vector getValues(){
 		return values;
-=======
-	public String[] getValues(){
-		String[] tmp = new String[values.size()];
-		tmp = values.toArray(tmp);
-		return tmp;
->>>>>>> a482fe754400d683803dc7b8b3c8b9a883bd829e
 	}
 	
 	public static Vector showDialog(JFrame parent, String title){
