@@ -94,7 +94,7 @@ public class newChatroom extends JDialog {
 		return values;
 	}
 	
-	public Vector showDialog(JFrame parent, String title){
+	public static Vector showDialog(JFrame parent, String title){
 		newChatroom dialog = new newChatroom(parent, title);
 		dialog.setVisible(true);
 		return dialog.getValues();

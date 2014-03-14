@@ -109,7 +109,7 @@ public class mainFram extends JFrame {
 		JButton btnNewButton = new JButton("");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Vector connection = new conDialog().showDialog(mainFram.this, "連線");
+				Vector connection = conDialog.showDialog(mainFram.this, "連線");
 			}
 		});
 		btnNewButton.setToolTipText("連線");
@@ -259,7 +259,7 @@ public class mainFram extends JFrame {
 	}
 	class addtab implements MouseListener{
 		public void mouseClicked(MouseEvent e) {
-			Vector connection = new newChatroom().showDialog(mainFram.this, "Create new room");
+			Vector connection = newChatroom.showDialog(mainFram.this, "Create new room");
 			JPanel tmpPan = new JPanel();
 			tablabel tmp = new tablabel((String)connection.get(0), tmpPan);
 			tabbedPane.add(tmpPan, tabbedPane.getTabCount()-1);
@@ -273,7 +273,7 @@ public class mainFram extends JFrame {
 	}
 	class addtabButton implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			Vector connection = new newChatroom().showDialog(mainFram.this, "Create new room");
+			Vector connection = newChatroom.showDialog(mainFram.this, "Create new room");
 			JPanel tmpPan = new JPanel();
 			tablabel tmp = new tablabel((String)connection.get(0), tmpPan);
 			tabbedPane.add(tmpPan, tabbedPane.getTabCount()-1);

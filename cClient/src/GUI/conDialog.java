@@ -27,7 +27,6 @@ public class conDialog extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public conDialog(){}
 	public conDialog(JFrame parent, String title) {
 		super(parent, title, true);
 		setBounds(100, 100, 299, 227);
@@ -93,7 +92,7 @@ public class conDialog extends JDialog {
 		return values;
 	}
 	
-	public Vector showDialog(JFrame parent, String title){
+	public static Vector showDialog(JFrame parent, String title){
 		conDialog tmp = new conDialog(parent, title);
 		tmp.setVisible(true);
 		return tmp.getValues();
