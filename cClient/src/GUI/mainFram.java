@@ -33,11 +33,14 @@ import java.awt.CardLayout;
 
 import javax.swing.GroupLayout.Alignment;
 
+import conn.cClient;
+
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 
 public class mainFram extends JFrame {
-
+	
+	private cClient theClient;
 	private JPanel contentPane;
 	private JTextField textField_2;
 	private JButton btnNewButton_1;
@@ -46,7 +49,7 @@ public class mainFram extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -57,12 +60,13 @@ public class mainFram extends JFrame {
 				}
 			}
 		});
-	}
+	}*/
 
 	/**
 	 * Create the frame.
 	 */
-	public mainFram() {
+	public mainFram(cClient tc) {
+		theClient = tc;
 		setIconImage(Toolkit.getDefaultToolkit().getImage(mainFram.class.getResource("/Icon/1394654416_MESSAGES.png")));
 		setTitle("NMLAB 網多戰隊-team12 聊天室");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

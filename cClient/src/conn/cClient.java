@@ -91,7 +91,7 @@ public class cClient implements Runnable{
 	private void judge(String msg) {
 		// TODO Auto-generated method stub
 		if (msg.startsWith("/u")) {
-			frame.showMsg(msg);
+			//frame.showMsg(msg);
 		}
 		
 	}
