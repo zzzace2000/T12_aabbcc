@@ -114,6 +114,10 @@ public class mainFram extends JFrame {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				String[] connection = (String[]) new conDialog().showDialog(mainFram.this, "連線");
+				System.out.println(connection[0]);
+				System.out.println(connection[1]);
+
+				System.out.println(connection[2]);
 
 				theClient.connectToServer(connection[0], Integer.parseInt((String) connection[1]), connection[2]);
 			}

@@ -64,6 +64,7 @@ public class cClient implements Runnable{
 			String msg = null;
 			try {
 				msg = input.readUTF();
+				System.out.println(msg);
 			} catch (IOException e) {
 				reconnect();
 				e.printStackTrace();
