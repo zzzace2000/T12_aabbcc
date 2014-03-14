@@ -36,7 +36,7 @@ public class cClient implements Runnable{
 		});*/
 	}
 	
-	public boolean connectToServer(String serverIP, int port, String name) {
+	public void connectToServer(String serverIP, int port, String name) {
 		
 		this.serverIP = serverIP;
 		this.port = port;
@@ -45,13 +45,13 @@ public class cClient implements Runnable{
 		try {
 			socket = new Socket(InetAddress.getByName(serverIP), port);
 			System.out.println("Connection successed");
-			
+
 			output = new DataOutputStream(socket.getOutputStream());
 			input = new DataInputStream(socket.getInputStream());
 			
 			Thread theThread = new Thread(cClient.this);
 			theThread.start();
-			return true;
+			//return true;
 			
 		} catch (IOException e) {
 			System.out.println("Client connect to Server failed");
@@ -59,13 +59,12 @@ public class cClient implements Runnable{
 			
 			e.printStackTrace();
 		}
-		return false;
+		//return false;
 	}
 
 	@Override
 	public void run() {
 		try {
-
 			while (true) {
 				
 				String msg = input.readUTF();
@@ -74,7 +73,7 @@ public class cClient implements Runnable{
 			}
 		} catch (IOException e) {
 			//reconnect();
-			System.out.println("get msg failed");
+			System.out.println("Client: get msg failed");
 			System.out.println(e.toString());
 			e.printStackTrace();
 		}
@@ -99,6 +98,7 @@ public class cClient implements Runnable{
 		// returns username
 		if (msg.startsWith("/c")) {
 			sendMsg("/u " + name);
+			System.out.println("Client: Send Msg /u "+ name);
 		}
 		else if (msg.startsWith("/r")) {
 			mainFram.showAlertDialog("Name has been used. Please use another name");

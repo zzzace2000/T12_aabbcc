@@ -31,17 +31,48 @@ public class conn_thread implements Runnable{
 
 	@Override
 	public void run() {
+		try {
+
+		// output success message
+		output.writeUTF("/c");
+		
 		while (true) {
+			String msg = input.readUTF();
+			String name= null;
+
+			System.out.println(msg);
 			
+			// username
+			if (msg.startsWith("/u")) {
+				name = msg.substring(3);
+				System.out.println(name);
+			}
+	
+			if (mainServer.checkName(name)) {
+				// Successfully create user
+				username = name;
+				output.writeUTF("/s");
+				break;
+			}
+			// tell user to change another user name
+			output.writeUTF("/r");
+				
+			} 
+		}
+		catch (IOException e) {
+			System.out.println("Server: User name check phase failed");
+			e.printStackTrace();
+		}
+		
+		while (true) {
 			try {
 				msg = input.readUTF();
-				
 				judge(msg);
 				
 			} catch (IOException e) {
 				
 				if (e instanceof SocketException) {
-					// delete client list
+					mainServer.deleteClient(conn_thread.this);
 				}
 				
 				System.out.println(e.toString());
@@ -69,6 +100,15 @@ public class conn_thread implements Runnable{
 			e.printStackTrace();
 		}
 	}
+
+	public String getUserName() {
+		if (username != null) {
+			return username;
+		}
+
+		return null;
+	}
+
 	
 	
 	

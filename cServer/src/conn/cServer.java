@@ -15,7 +15,7 @@ public class cServer {
 	static int port = 5001;
 
 	ServerSocket ss;
-	ArrayList<conn_thread> conn_client;
+	Vector<conn_thread> conn_client;
 	ArrayList<String> nameList = new ArrayList<String>();
 	
 	public cServer() {
@@ -37,32 +37,9 @@ public class cServer {
 				// System show
 				System.out.println("Client connection");
 				
-				// output success message
-				output.writeUTF("/c");
-				
-				while (true) {
-					String msg = input.readUTF();
-					String name= null;
-
-					System.out.println(msg);
-					
-					// username
-					if (msg.startsWith("/u")) {
-						name = msg.substring(3);
-						System.out.println(name);
-					}
-					
-					if (!name_exists(name)) {
-						nameList.add(name);
-						// Successfully create user
-						output.writeUTF("/s");
-						break;
-					}
-					// tell user to change another user name
-					output.writeUTF("/r");
-				}
 				conn_thread theThread = new conn_thread(this, theSocket);
-				conn_client.add(theThread);
+				/*  Find problems....I can't store the thread into a vector....why?   */
+				//conn_client.add(theThread);
 				Thread td = new Thread(theThread);
 				td.start();
 			}
@@ -84,6 +61,26 @@ public class cServer {
 		}
 		return false;
 	}
+
+	public void deleteClient(conn_thread theThread) {
+		String clientName = theThread.getUserName();
+		if (clientName != null) {
+			conn_client.remove(theThread);
+			nameList.remove(clientName);
+		}
+	}
+
+	public boolean checkName(String name) {
+		for (String n: nameList)
+		{
+			if ( n == name) {
+				return false;
+			}
+		}
+		nameList.add(name);
+		return true;
+	}
+	
 	
 	
 	

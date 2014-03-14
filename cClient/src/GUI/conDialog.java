@@ -24,7 +24,8 @@ public class conDialog extends JDialog {
 	private JTextField textField_2;
 	private Vector<String> values = new Vector<String>();
 	
-	private static String IP_ADDRESS="140.112.18.196";
+	//140.112.18.196
+	private static String IP_ADDRESS="111.240.254.32";
 	private static int PORT = 5001;
 
 	/**

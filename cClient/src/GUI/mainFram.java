@@ -70,7 +70,7 @@ public class mainFram extends JFrame {
 		theClient = tc;
 		setIconImage(Toolkit.getDefaultToolkit().getImage(mainFram.class.getResource("/Icon/1394654416_MESSAGES.png")));
 		setTitle("NMLAB 網多戰隊-team12 聊天室");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 600, 400);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -116,13 +116,8 @@ public class mainFram extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				boolean success;
 				Vector<String> connection = conDialog.showDialog(mainFram.this, "連線");
-				success = theClient.connectToServer((String)connection.get(0), Integer.parseInt((String)connection.get(1)), (String)connection.get(2));
-				if (success) {
-					dispose();
-				}
-				else {
-					showAlertDialog("Username has been used.");
-				}
+				theClient.connectToServer((String)connection.get(0), Integer.parseInt((String)connection.get(1)), (String)connection.get(2));
+				
 			}
 
 
