@@ -54,7 +54,7 @@ public class conn_thread implements Runnable{
 	public void judge(String msg) {
 		
 		if (msg.startsWith("/c")) {
-			System.out.println("connect successfully");
+			
 		}
 		if (msg.startsWith("success")) {
 			sendMsg("Hi");

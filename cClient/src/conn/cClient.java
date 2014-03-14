@@ -64,19 +64,19 @@ public class cClient implements Runnable{
 
 	@Override
 	public void run() {
-		while (true) {
-			
-			String msg = null;
-			try {
-				msg = input.readUTF();
+		try {
+
+			while (true) {
+				
+				String msg = input.readUTF();
 				System.out.println(msg);
-			} catch (IOException e) {
-				reconnect();
-				e.printStackTrace();
+				judge(msg);
 			}
-			
-			judge(msg);
-			
+		} catch (IOException e) {
+			//reconnect();
+			System.out.println("get msg failed");
+			System.out.println(e.toString());
+			e.printStackTrace();
 		}
 	}
 	
@@ -90,32 +90,23 @@ public class cClient implements Runnable{
 		}
 	}
 
-	private void reconnect() {
+	private synchronized void reconnect() {
 		connectToServer(serverIP, port, name);
 	}
 
 	private void judge(String msg) {
-		// TODO Auto-generated method stub
 		
-		String Msg;
-		try {
-			Msg = input.readUTF();
-		
-		
-		if (Msg.startsWith("/c")) {
+		// returns username
+		if (msg.startsWith("/c")) {
 			sendMsg("/u " + name);
 		}
-		else if (Msg.startsWith("/r")) {
-			mainFram.showAlertDialog("Name has been occupied.");
+		else if (msg.startsWith("/r")) {
+			mainFram.showAlertDialog("Name has been used. Please use another name");
 		}
-		else {
-			reconnect();
+		else if (msg.startsWith("/s")) {
+			System.out.println("Successfully add Name list");
 		}
-		} catch (IOException e) {
-			System.out.println("Failed in judge msg");
-			System.out.println(e.toString());
-			e.printStackTrace();
-		}
+		
 		
 	}
 	

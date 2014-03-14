@@ -15,7 +15,7 @@ public class cServer {
 	static int port = 5001;
 
 	ServerSocket ss;
-	Vector<conn_thread> conn_client;
+	ArrayList<conn_thread> conn_client;
 	ArrayList<String> nameList = new ArrayList<String>();
 	
 	public cServer() {
@@ -25,12 +25,12 @@ public class cServer {
 			
 			while(true) {
 				
-				Socket theSocket;
+				Socket theSocket = new Socket();
+				
 				synchronized (this) {
 					System.out.println("Start listening");
 					theSocket = ss.accept();
 				}
-				System.out.println("Accept some Clients");
 				DataInputStream input = new DataInputStream( theSocket.getInputStream() );
 				DataOutputStream output = new DataOutputStream( theSocket.getOutputStream() );
 				
@@ -54,13 +54,16 @@ public class cServer {
 					
 					if (!name_exists(name)) {
 						nameList.add(name);
+						// Successfully create user
+						output.writeUTF("/s");
 						break;
 					}
 					// tell user to change another user name
 					output.writeUTF("/r");
 				}
-				conn_client.add(new conn_thread(this, theSocket));
-				Thread td = new Thread(conn_client.lastElement());
+				conn_thread theThread = new conn_thread(this, theSocket);
+				conn_client.add(theThread);
+				Thread td = new Thread(theThread);
 				td.start();
 			}
 			
