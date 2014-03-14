@@ -17,6 +17,11 @@ public class cClient implements Runnable{
 	DataOutputStream output;
 	DataInputStream input;
 	mainFram frame;
+	
+	String serverIP;
+	int port;
+	String name;
+	
 	public cClient() {
 		mainFram frame = new mainFram(cClient.this);
 		frame.setVisible(true);
@@ -31,30 +36,30 @@ public class cClient implements Runnable{
 		});*/
 	}
 	
-	public void connectToServer(String serverIP, int port, String name) {
+	public boolean connectToServer(String serverIP, int port, String name) {
 		
+		this.serverIP = serverIP;
+		this.port = port;
+		this.name = name;
+		System.out.println("Client connects Server with IP: "+serverIP+", port: "+port);
 		try {
 			socket = new Socket(InetAddress.getByName(serverIP), port);
-		} catch (UnknownHostException e) {
-			System.out.println("can't analyze host");
-			e.printStackTrace();
-		} catch (IOException e) {
-			System.out.println("connection falied");
-			e.printStackTrace();
-		}
-		
-		try {
+			System.out.println("Connection successed");
+			
 			output = new DataOutputStream(socket.getOutputStream());
 			input = new DataInputStream(socket.getInputStream());
+			
+			Thread theThread = new Thread(cClient.this);
+			theThread.start();
+			return true;
+			
 		} catch (IOException e) {
-			System.out.println("Connection failed. Can't open input output stream.");
+			System.out.println("Client connect to Server failed");
+			System.out.println(e.toString());
+			
 			e.printStackTrace();
 		}
-		
-		sendMsg("success!");
-		Thread theThread = new Thread(cClient.this);
-		theThread.start();
-		
+		return false;
 	}
 
 	@Override
@@ -69,6 +74,7 @@ public class cClient implements Runnable{
 				reconnect();
 				e.printStackTrace();
 			}
+			
 			judge(msg);
 			
 		}
@@ -78,20 +84,37 @@ public class cClient implements Runnable{
 		try {
 			output.writeUTF(msg);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			System.out.println("sendMsg failed");
+			System.out.println(e.toString());
 			e.printStackTrace();
 		}
 	}
 
 	private void reconnect() {
-		// TODO Auto-generated method stub
-		
+		connectToServer(serverIP, port, name);
 	}
 
 	private void judge(String msg) {
 		// TODO Auto-generated method stub
-		if (msg.startsWith("/u")) {
-			//frame.showMsg(msg);
+		
+		String Msg;
+		try {
+			Msg = input.readUTF();
+		
+		
+		if (Msg.startsWith("/c")) {
+			sendMsg("/u " + name);
+		}
+		else if (Msg.startsWith("/r")) {
+			mainFram.showAlertDialog("Name has been occupied.");
+		}
+		else {
+			reconnect();
+		}
+		} catch (IOException e) {
+			System.out.println("Failed in judge msg");
+			System.out.println(e.toString());
+			e.printStackTrace();
 		}
 		
 	}

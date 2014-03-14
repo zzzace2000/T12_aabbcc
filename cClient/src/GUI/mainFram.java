@@ -45,7 +45,8 @@ public class mainFram extends JFrame {
 	private JTextField textField_2;
 	private JButton btnNewButton_1;
 	private JTabbedPane tabbedPane;
-
+	
+	
 	/**
 	 * Launch the application.
 	 */
@@ -113,8 +114,18 @@ public class mainFram extends JFrame {
 		JButton btnNewButton = new JButton("");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Vector connection = conDialog.showDialog(mainFram.this, "連線");
+				boolean success;
+				Vector<String> connection = conDialog.showDialog(mainFram.this, "連線");
+				success = theClient.connectToServer((String)connection.get(0), Integer.parseInt((String)connection.get(1)), (String)connection.get(2));
+				if (success) {
+					dispose();
+				}
+				else {
+					showAlertDialog("Username has been used.");
+				}
 			}
+
+
 		});
 		btnNewButton.setToolTipText("連線");
 		btnNewButton.setIcon(new ImageIcon(mainFram.class.getResource("/Icon/connection.png")));
@@ -233,7 +244,13 @@ public class mainFram extends JFrame {
 		
 		textField_2.addKeyListener(new checktypeListener());
 	}
-
+	
+	public static void showAlertDialog(String alertMsg) {
+		// Write a pump up dialog that shows some alerts
+		System.out.println("Alert: "+alertMsg);
+	}
+	
+	
 	class checktypeListener extends KeyAdapter{
 		public void keyReleased(KeyEvent e){
 			if(textField_2.getText().length() != 0)
