@@ -15,32 +15,27 @@ public class cServer {
 	static int port = 5001;
 
 	ServerSocket ss;
-	Vector<conn_thread> conn_client;
+	Vector<conn_thread> conn_client = new Vector<conn_thread>();
 	ArrayList<String> nameList = new ArrayList<String>();
 	
 	public cServer() {
+		// initialize variable
 		
 		try {
 			ss = new ServerSocket(port);
 			
 			while(true) {
-				
-				Socket theSocket = new Socket();
-				
+								
 				synchronized (this) {
 					System.out.println("Start listening");
-					theSocket = ss.accept();
+					Socket theSocket = ss.accept();
+					
+					// System show
+					System.out.println("Client connection");
+				
+					conn_client.add(new conn_thread(this, theSocket));
 				}
-				DataInputStream input = new DataInputStream( theSocket.getInputStream() );
-				DataOutputStream output = new DataOutputStream( theSocket.getOutputStream() );
-				
-				// System show
-				System.out.println("Client connection");
-				
-				conn_thread theThread = new conn_thread(this, theSocket);
-				/*  Find problems....I can't store the thread into a vector....why?   */
-				//conn_client.add(theThread);
-				Thread td = new Thread(theThread);
+				Thread td = new Thread(conn_client.lastElement());
 				td.start();
 			}
 			
