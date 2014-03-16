@@ -42,9 +42,11 @@ public class mainFram extends JFrame {
 	
 	private cClient theClient;
 	private JPanel contentPane;
-	private JTextField textField_2;
+	private JTextField textField_2;//enter txt
 	private JButton btnNewButton_1;
 	private JTabbedPane tabbedPane;
+        public JTextPane chatBoard = new JTextPane(); //lobby chat
+        JTextPane allOnline = new JTextPane();// new friend online
 	
 	
 	/**
@@ -91,9 +93,8 @@ public class mainFram extends JFrame {
 		label.setBackground(Color.WHITE);
 		scrollPane.setColumnHeaderView(label);
 		
-		JTextPane textPane_1 = new JTextPane();
-		textPane_1.setEditable(false);
-		scrollPane.setViewportView(textPane_1);
+		allOnline.setEditable(false);
+		scrollPane.setViewportView(allOnline);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
 		scrollPane_1.setBounds(0, 198, 130, 164);
@@ -156,9 +157,9 @@ public class mainFram extends JFrame {
 		JScrollPane scrollPane_2 = new JScrollPane();
 		panel_3.add(scrollPane_2, BorderLayout.CENTER);
 		
-		JTextPane textPane = new JTextPane();
-		textPane.setEditable(false);
-		scrollPane_2.setViewportView(textPane);
+		
+		chatBoard.setEditable(false);
+		scrollPane_2.setViewportView(chatBoard);
 		tabbedPane.setTabComponentAt(0, main);
 		
 		JPanel panel_4 = new JPanel();
@@ -204,7 +205,17 @@ public class mainFram extends JFrame {
 		btnNewButton_1.setIcon(new ImageIcon(mainFram.class.getResource("/Icon/tosend.png")));
 		btnNewButton_1.setBounds(397, 36, 49, 49);
 		panel_2.add(btnNewButton_1);
-		
+                btnNewButton_1.addActionListener(new ActionListener(){
+                    public void actionPerformed(ActionEvent e) {
+                        //System.out.println(textField_2.getText());
+                        //chatBoard.replaceSelection("hello!!");
+                        theClient.sendPMsg("/t " +textField_2.getText());
+                        
+                    }
+                });
+                
+                
+                
 		JComboBox comboBox = new JComboBox();
 		comboBox.setBounds(37, 9, 42, 23);
 		panel_2.add(comboBox);
@@ -239,6 +250,18 @@ public class mainFram extends JFrame {
 		
 		textField_2.addKeyListener(new checktypeListener());
 	}
+        
+         //////display///////
+        //display chat conten
+        public void disTxt (String from, String msg) {
+            //chatBoard.replaceSelection("hello I'm happy");
+            chatBoard.replaceSelection(from + " " + msg + "\n");
+        }
+        //display friends 
+        public void disFrd (String name) {
+            
+            allOnline.replaceSelection(name);
+        }
 	
 	public static void showAlertDialog(String alertMsg) {
 		// Write a pump up dialog that shows some alerts

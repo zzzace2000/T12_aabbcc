@@ -75,6 +75,34 @@ public class cServer {
 		nameList.add(name);
 		return true;
 	}
+        
+         //tell all clients that a new member has joined in
+        public String getAllOnl(String self){
+            String allO = new String("");
+            for (conn_thread i : conn_client){
+                if (i.getUserName() != self){
+                    allO+=" ";
+                    allO+=i.getUserName();                    
+                }
+            }
+            return allO;
+        }
+        public  void synNewMem (String newO) {
+            for (conn_thread i : conn_client) {
+                if (i.getUserName() != newO) {
+                    // "/o new_name"
+                    i.sendPMsg("/o "+ newO);
+                }
+            }
+        }
+        
+        /////functions for transmitting/////
+        
+        public void broadcast(String from, String tx){
+            for (conn_thread i : conn_client)
+                // "/t from_name to_say"
+                i.sendPMsg("/t " + from + " " + tx);
+        }
 	
 	
 	

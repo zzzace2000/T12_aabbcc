@@ -10,18 +10,29 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 import GUI.mainFram;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.PrintStream;
+import java.util.Vector;
 
 public class cClient implements Runnable{
-		
-	Socket socket;
-	DataOutputStream output;
-	DataInputStream input;
-	mainFram frame;
-	
+			//members for connecting2Server
+        Socket socket;
 	String serverIP;
-	int port;
+        int port;
+        DataOutputStream output;
+	DataInputStream input;
+	//members for GUI
+        mainFram frame;
+	//members for operating thread
+        Thread theThread = new Thread(cClient.this);
+	//members about self-informaion
 	String name;
-	
+        Vector<String> onList = new Vector<String>();
+        String fileName;
+        File file;
+        
 	public cClient() {
 		mainFram frame = new mainFram(cClient.this);
 		frame.setVisible(true);
@@ -79,35 +90,119 @@ public class cClient implements Runnable{
 		}
 	}
 	
-	private void sendMsg(String msg) {
-		try {
-			output.writeUTF(msg);
-		} catch (IOException e) {
-			System.out.println("sendMsg failed");
-			System.out.println(e.toString());
-			e.printStackTrace();
-		}
-	}
 
 	private synchronized void reconnect() {
 		connectToServer(serverIP, port, name);
 	}
 
-	private void judge(String msg) {
-		
-		// returns username
-		if (msg.startsWith("/c")) {
-			sendMsg("/u " + name);
-			System.out.println("Client: Send Msg /u "+ name);
-		}
-		else if (msg.startsWith("/r")) {
-			mainFram.showAlertDialog("Name has been used. Please use another name");
-		}
-		else if (msg.startsWith("/s")) {
-			System.out.println("Successfully add Name list");
-		}
-		
+	 private void judge(String msg) {
+		// TODO Auto-generated method stub
+                  
+                    //if Connection made
+                    if (msg.startsWith("/c")) {                       
+			sendPMsg("/u " + name);
+                    }
+                    //if name is Repeated
+                    else if (msg.startsWith("/r")) {
+			mainFram.showAlertDialog("Name has been occupied.");
+                    }
+                    //if login Succeed
+                    else if (msg.startsWith("/s")) {
+                        if (msg.length()>2)
+                            startComm(msg.substring(3));
+                        else startComm("");
+                    }
+                    else if (msg.startsWith("/t")){
+                        recPMsg(msg.substring(3));
+                    }
+                    else if (msg.startsWith("/o")) {
+                        newOnline(msg.substring(3));
+                    }
+                    else {
+			reconnect();
+                    }
+          
 		
 	}
+         
+         
+        //////helper functions//////
+        //update online friend list
+        public void newOnline(String newName){
+            System.out.println("new friend in :"+ newName);
+            frame.disFrd(newName);
+        }
+        
+        
+        //////////functions for talking///////////
+        //initializing data...
+        private void startComm(String friendL){
+            //initialize all friends online
+            if (friendL.length()>0){
+               String[] splitFrd = friendL.split(" ");
+               for (String i : splitFrd)
+                    onList.add(i);
+               for (String i: onList)
+                    System.out.print("friend " + i + " ");
+               System.out.println("");
+            }
+        }
+	
+        //sending
+        //protocol: /t  -Broadcast, -Whisper [who]
+        //raw message
+
+        
+        //message with headers(or protocols)
+        public void sendPMsg(String msg) {
+		try {
+			output.writeUTF(msg);
+		} catch (IOException e) {
+			System.out.println("sendPMsg failed");
+			System.out.println(e.toString());
+			e.printStackTrace();
+		}
+	}
+        
+        public void sendFile () {
+            try {
+                output.writeUTF("/f");
+                PrintStream printStream = new PrintStream(socket.getOutputStream());
+                printStream.println(file.getName());
+            
+                System.out.print("transmitting...");
+            
+                BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(file));
+            
+                int readin;
+                while ((readin = inputStream.read()) != -1) {
+                    printStream.write(readin);
+                    Thread.yield();
+                }
+                printStream.flush();
+                printStream.close();
+                inputStream.close();
+                
+                System.out.println("transmitting completed!");
+            }
+            catch(Exception e) {
+                System.out.println("sendFile failed");
+                System.out.println(e.toString());
+                e.printStackTrace();
+            }
+        }
+        
+        //receiving
+        private void recPMsg(String tx) {
+            System.out.println("in recPMsg :"+tx);
+            int parse = tx.indexOf(" ");
+            String from = tx.substring(0, parse);
+            String msgOnB = tx.substring(parse+1);
+            //System.out.println(msgOnB);
+            //frame.chatBoard.replaceSelection(from + " " + msgOnB);
+            frame.disTxt(from, msgOnB);
+        }
+        
+        
 	
 }

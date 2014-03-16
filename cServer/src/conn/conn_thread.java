@@ -51,7 +51,7 @@ public class conn_thread implements Runnable{
 			if (mainServer.checkName(name)) {
 				// Successfully create user
 				username = name;
-				output.writeUTF("/s");
+				output.writeUTF("/s" + mainServer.getAllOnl(name));
 				break;
 			}
 			// tell user to change another user name
@@ -88,11 +88,11 @@ public class conn_thread implements Runnable{
 			
 		}
 		if (msg.startsWith("success")) {
-			sendMsg("Hi");
+			sendPMsg("Hi");
 		}
 	}
 
-	private void sendMsg(String msg) {
+	public void sendPMsg(String msg) {
 		try {
 			output.writeUTF(msg);
 		} catch (IOException e) {
