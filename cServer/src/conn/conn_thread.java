@@ -48,15 +48,17 @@ public class conn_thread implements Runnable{
 				System.out.println(name);
 			}
 	
-			if (mainServer.checkName(name)) {
+			if (!mainServer.checkName(name)) {
 				// Successfully create user
 				username = name;
 				output.writeUTF("/s" + mainServer.getAllOnl(name));
 				break;
 			}
-			// tell user to change another user name
-			output.writeUTF("/r");
-				
+			else {
+				// tell user to change another user name
+				output.writeUTF("/r");
+				breakHand();
+			}	
 			} 
 		}
 		catch (IOException e) {
@@ -82,6 +84,15 @@ public class conn_thread implements Runnable{
 		}
 	}
 	
+	private void breakHand() {
+		try {
+			sock.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		Thread.currentThread().interrupt();
+	}
+
 	public void judge(String msg) {
 		
 		if (msg.startsWith("/c")) {

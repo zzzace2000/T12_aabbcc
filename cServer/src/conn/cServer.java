@@ -69,11 +69,11 @@ public class cServer {
 		for (String n: nameList)
 		{
 			if ( n == name) {
-				return false;
+				return true;
 			}
 		}
 		nameList.add(name);
-		return true;
+		return false;
 	}
         
          //tell all clients that a new member has joined in

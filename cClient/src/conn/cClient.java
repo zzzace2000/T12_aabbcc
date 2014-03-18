@@ -9,7 +9,10 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import GUI.conDialog;
 import GUI.mainFram;
+import GUI.newChatroom;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -34,7 +37,11 @@ public class cClient implements Runnable{
         File file;
         
 	public cClient() {
-		mainFram frame = new mainFram(cClient.this);
+		frame = new mainFram(cClient.this);
+
+		conDialog dialog = new conDialog(frame, "haha");
+		dialog.setVisible(true);
+		
 		frame.setVisible(true);
 		/*EventQueue.invokeLater(new Runnable() {
 			public void run() {
