@@ -1,6 +1,8 @@
 package GUI;
 
 import java.awt.BorderLayout;
+import java.net.Inet4Address;
+import java.net.UnknownHostException;
 import java.util.Vector;
 import java.awt.FlowLayout;
 
@@ -24,8 +26,7 @@ public class conDialog extends JDialog {
 	private JTextField textField_2;
 	private Vector<String> values = new Vector<String>();
 	
-	//140.112.18.196
-	private static String IP_ADDRESS="111.240.254.32";
+	private String IP_ADDRESS;
 	private static int PORT = 5001;
 
 	/**
@@ -38,6 +39,12 @@ public class conDialog extends JDialog {
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
+		
+		try {
+			IP_ADDRESS = getLocalIPAddress();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}		
 		
 		textField = new JTextField();
 		textField.setText(IP_ADDRESS);
@@ -101,4 +108,13 @@ public class conDialog extends JDialog {
 		tmp.setVisible(true);
 		return tmp.getValues();
 	}
+	
+	private String getLocalIPAddress() throws UnknownHostException {
+		String theAddresString = Inet4Address.getLocalHost().getHostAddress();
+		System.out.println(theAddresString);
+		return theAddresString;
+		
+	}
+	
+	
 }
