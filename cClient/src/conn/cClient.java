@@ -39,8 +39,8 @@ public class cClient implements Runnable{
 	public cClient() {
 		frame = new mainFram(cClient.this);
 
-		conDialog dialog = new conDialog(frame, "haha");
-		dialog.setVisible(true);
+		//conDialog dialog = new conDialog(frame, "haha");
+		//dialog.setVisible(true);
 		
 		frame.setVisible(true);
 		/*EventQueue.invokeLater(new Runnable() {
@@ -123,6 +123,7 @@ public class cClient implements Runnable{
                         recPMsg(msg.substring(3));
                     }
                     else if (msg.startsWith("/o")) {
+                    	System.out.println("in /o");
                         newOnline(msg.substring(3));
                     }
                     else {
@@ -136,7 +137,7 @@ public class cClient implements Runnable{
         //////helper functions//////
         //update online friend list
         public void newOnline(String newName){
-            System.out.println("new friend in :"+ newName);
+            //.println("new friend in :"+ newName);
             frame.disFrd(newName);
         }
         
@@ -145,13 +146,13 @@ public class cClient implements Runnable{
         //initializing data...
         private void startComm(String friendL){
             //initialize all friends online
+        	System.out.print(friendL);
             if (friendL.length()>0){
                String[] splitFrd = friendL.split(" ");
                for (String i : splitFrd)
                     onList.add(i);
-               for (String i: onList)
-                    System.out.print("friend " + i + " ");
-               System.out.println("");
+               for(String i : onList)
+            	   frame.disFrd(i);
             }
         }
 	

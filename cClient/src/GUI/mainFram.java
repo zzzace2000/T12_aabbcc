@@ -3,6 +3,7 @@ package GUI;
 import javax.swing.*;
 
 import java.awt.BorderLayout;
+import java.util.ArrayList;
 import java.util.Vector;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -45,9 +46,8 @@ public class mainFram extends JFrame {
 	private JTextField textField_2;//enter txt
 	private JButton btnNewButton_1;
 	private JTabbedPane tabbedPane;
-        public JTextPane chatBoard = new JTextPane(); //lobby chat
-        JTextPane allOnline = new JTextPane();// new friend online
-	
+	public JPanel allOnline;
+    public JTextPane chatBoard = new JTextPane(); //lobby chat
 	
 	/**
 	 * Launch the application.
@@ -93,8 +93,10 @@ public class mainFram extends JFrame {
 		label.setBackground(Color.WHITE);
 		scrollPane.setColumnHeaderView(label);
 		
-		allOnline.setEditable(false);
+		allOnline = new JPanel();
+		allOnline.setBackground(Color.WHITE);
 		scrollPane.setViewportView(allOnline);
+		allOnline.setLayout(new BoxLayout(allOnline, BoxLayout.Y_AXIS));
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
 		scrollPane_1.setBounds(0, 198, 130, 164);
@@ -103,9 +105,9 @@ public class mainFram extends JFrame {
 		JLabel label_1 = new JLabel("當前聊天室在線");
 		scrollPane_1.setColumnHeaderView(label_1);
 		
-		JTextPane textPane_2 = new JTextPane();
-		textPane_2.setEditable(false);
-		scrollPane_1.setViewportView(textPane_2);
+		JPanel thisChatroomOnline = new JPanel();
+		thisChatroomOnline.setBackground(Color.WHITE);
+		scrollPane_1.setViewportView(thisChatroomOnline);
 		
 		JPanel panel_5 = new JPanel();
 		panel_5.setBounds(0, 0, 130, 24);
@@ -229,26 +231,12 @@ public class mainFram extends JFrame {
 		separator.setBounds(89, 11, 1, 21);
 		panel_2.add(separator);
 		
-		JButton btnNewButton_4 = new JButton("");
-		btnNewButton_4.setIcon(new ImageIcon(mainFram.class.getResource("/Icon/soundicon.png")));
-		btnNewButton_4.setBounds(100, 9, 29, 23);
-		panel_2.add(btnNewButton_4);
-		
-		JButton button = new JButton("");
-		button.setIcon(new ImageIcon(mainFram.class.getResource("/Icon/mic.png")));
-		button.setBounds(128, 9, 29, 23);
-		panel_2.add(button);
-		
-		JSeparator separator_1 = new JSeparator();
-		separator_1.setOrientation(SwingConstants.VERTICAL);
-		separator_1.setBounds(167, 11, 1, 21);
-		panel_2.add(separator_1);
-		
-		JComboBox comboBox_1 = new JComboBox();
-		comboBox_1.setBounds(178, 9, 144, 23);
-		panel_2.add(comboBox_1);
+		JButton stickers = new JButton("strickers");
+		stickers.setBounds(100, 9, 84, 23);
+		panel_2.add(stickers);
 		
 		textField_2.addKeyListener(new checktypeListener());
+		allOnline.add(new JLabel("hello"));
 	}
         
          //////display///////
@@ -259,10 +247,10 @@ public class mainFram extends JFrame {
         }
         //display friends 
         public void disFrd (String name) {
-            
-            allOnline.replaceSelection(name);
+			//allOnline.add(new onlineLabel(name));
+        	System.out.println("in disFRD!");
+        	allOnline.add(new JLabel("hello"));
         }
-	
 	public static void showAlertDialog(String alertMsg) {
 		// Write a pump up dialog that shows some alerts
 		System.out.println("Alert: "+alertMsg);
@@ -276,6 +264,24 @@ public class mainFram extends JFrame {
 			else
 				btnNewButton_1.setEnabled(false);
 		}
+	}
+	class onlineLabel extends JLabel implements MouseListener{
+		private privateMessage PM;
+		onlineLabel(String name){
+			setIcon(new ImageIcon(mainFram.class.getResource("/Icon/onlineGreenlignt.png")));
+			setText(name);
+			setToolTipText("double click to sned prvate message");
+			addMouseListener(this);
+		}
+		public void mouseClicked(MouseEvent arg0) {
+			if(arg0.getClickCount() == 2)
+					PM = new privateMessage();
+					PM.setVisible(true);
+		}
+		public void mouseEntered(MouseEvent arg0) {}
+		public void mouseExited(MouseEvent arg0) {}
+		public void mousePressed(MouseEvent arg0) {}
+		public void mouseReleased(MouseEvent arg0) {}
 	}
 	class tablabel extends JPanel implements ActionListener{
 		JButton exit;
