@@ -47,16 +47,8 @@ public class cServer {
 		
 	}
 
-	private boolean name_exists(String name) {
-		for (String n: nameList)
-		{
-			if ( n == name) {
-				return true;
-			}
-		}
-		return false;
-	}
 
+        ////helper functions////
 	public void deleteClient(conn_thread theThread) {
 		String clientName = theThread.getUserName();
 		if (clientName != null) {
@@ -102,6 +94,20 @@ public class cServer {
             for (conn_thread i : conn_client)
                 // "/t from_name to_say"
                 i.sendPMsg("/t " + from + " " + tx);
+        }
+        
+        public void whisper(String rec, String from, String tx){
+            for (conn_thread i : conn_client) {
+                
+                if (i.getUserName() == rec) {
+                    System.out.println("name = "+ i.getUserName());
+                    i.sendPMsg("/t " + from + " " + tx);
+                }
+                else if (i.getUserName() == from) {
+                     i.sendPMsg("/t " + from + " " + tx);
+                     System.out.println("name = "+ i.getUserName());
+                }
+            }
         }
 	
 	

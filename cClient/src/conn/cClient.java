@@ -141,6 +141,13 @@ public class cClient implements Runnable{
             frame.disFrd(newName);
         }
         
+	public String getUserName() {
+		if (name != null) {
+			return name;
+		}
+		return null;
+	}
+        
         
         //////////functions for talking///////////
         //initializing data...

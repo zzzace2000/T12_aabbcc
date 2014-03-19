@@ -29,7 +29,6 @@ public class newChatroom extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public newChatroom(){}
 	public newChatroom(JFrame parent, String title) {
 		super(parent, title, true);
 		setAlwaysOnTop(true);

@@ -1,5 +1,6 @@
 package GUI;
 
+import conn.cClient;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
@@ -11,6 +12,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JScrollPane;
 
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 import javax.swing.JComboBox;
@@ -22,13 +25,17 @@ import java.awt.event.KeyEvent;
 
 public class privateMessage extends JFrame {
 
+        private cClient theClient;
+        private String talkTo;
 	private JPanel contentPane;
 	private JTextField textField;
 	private JButton sendButton;
 	/**
 	 * Create the frame.
 	 */
-	public privateMessage() {
+	public privateMessage(cClient cc, String rec) {
+                theClient = cc;
+                talkTo = rec;
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 481, 357);
 		contentPane = new JPanel();
@@ -79,6 +86,14 @@ public class privateMessage extends JFrame {
 		sendButton.setIcon(new ImageIcon(privateMessage.class.getResource("/Icon/tosend.png")));
 		sendButton.setBounds(397, 32, 49, 49);
 		panel.add(sendButton);
+                sendButton.addActionListener(new ActionListener(){
+                    public void actionPerformed(ActionEvent e) {
+                        System.out.println(textField.getText());
+                        //chatBoard.replaceSelection("hello!!");
+                        theClient.sendPMsg("/t -w "+ talkTo + " " + textField.getText());
+                        
+                    }
+                });
 		
 		JSeparator separator_2 = new JSeparator();
 		separator_2.setOrientation(SwingConstants.VERTICAL);

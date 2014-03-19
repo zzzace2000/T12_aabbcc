@@ -46,9 +46,9 @@ public class mainFram extends JFrame {
 	private JTextField textField_2;//enter txt
 	private JButton btnNewButton_1;
 	private JTabbedPane tabbedPane;
+	private JPanel chatBoardPane;
 	private JLabel userNameLabel ;
 	public JPanel allOnline;
-    public JTextPane chatBoard = new JTextPane(); //lobby chat
 	
 	/**
 	 * Launch the application.
@@ -160,9 +160,10 @@ public class mainFram extends JFrame {
 		JScrollPane scrollPane_2 = new JScrollPane();
 		panel_3.add(scrollPane_2, BorderLayout.CENTER);
 		
-		
-		chatBoard.setEditable(false);
-		scrollPane_2.setViewportView(chatBoard);
+		chatBoardPane = new JPanel();
+		chatBoardPane.setBackground(Color.WHITE);
+		scrollPane_2.setViewportView(chatBoardPane);
+		chatBoardPane.setLayout(new BoxLayout(chatBoardPane, BoxLayout.Y_AXIS));
 		tabbedPane.setTabComponentAt(0, main);
 		
 		JPanel panel_4 = new JPanel();
@@ -208,14 +209,14 @@ public class mainFram extends JFrame {
 		btnNewButton_1.setIcon(new ImageIcon(mainFram.class.getResource("/Icon/tosend.png")));
 		btnNewButton_1.setBounds(397, 36, 49, 49);
 		panel_2.add(btnNewButton_1);
-                btnNewButton_1.addActionListener(new ActionListener(){
+                /*btnNewButton_1.addActionListener(new ActionListener(){
                     public void actionPerformed(ActionEvent e) {
                         //System.out.println(textField_2.getText());
                         //chatBoard.replaceSelection("hello!!");
                         theClient.sendPMsg("/t " +textField_2.getText());
                         
                     }
-                });
+                });*/
                 
                 
                 
@@ -241,13 +242,20 @@ public class mainFram extends JFrame {
 		panel_2.add(userNameLabel);
 		
 		textField_2.addKeyListener(new checktypeListener());
+		
+		snedButton sendListener = new snedButton();
+		textField_2.addActionListener(sendListener);
+		btnNewButton_1.addActionListener(sendListener);
 	}
         
          //////display///////
         //display chat conten
         public void disTxt (String from, String msg) {
-            //chatBoard.replaceSelection("hello I'm happy");
-            chatBoard.replaceSelection(from + " " + msg + "\n");
+            //JTextPane tmp = new JTextPane();
+        	JLabel tmp = new JLabel();
+            tmp.setText(from + ":" + msg);
+            chatBoardPane.add(tmp);
+            System.out.println("here");
         }
         //display friends 
         public void disFrd (String name) {
@@ -269,7 +277,9 @@ public class mainFram extends JFrame {
 	}
 	class onlineLabel extends JLabel implements MouseListener{
 		private privateMessage PM;
+                String talkTo;
 		onlineLabel(String name){
+                    talkTo = name;
 			setIcon(new ImageIcon(mainFram.class.getResource("/Icon/onlineGreenlignt.png")));
 			setText(name);
 			setToolTipText("double click to sned prvate message");
@@ -277,7 +287,7 @@ public class mainFram extends JFrame {
 		}
 		public void mouseClicked(MouseEvent arg0) {
 			if(arg0.getClickCount() == 2)
-					PM = new privateMessage();
+					PM = new privateMessage(theClient,talkTo);
 					PM.setVisible(true);
 		}
 		public void mouseEntered(MouseEvent arg0) {}
@@ -325,6 +335,13 @@ public class mainFram extends JFrame {
 			tablabel tmp = new tablabel((String)connection.get(0), tmpPan);
 			tabbedPane.add(tmpPan, tabbedPane.getTabCount()-1);
 			tabbedPane.setTabComponentAt(tabbedPane.indexOfComponent(tmpPan), tmp);
+		}
+	}
+	class snedButton implements ActionListener{
+		public void actionPerformed(ActionEvent e){
+			theClient.sendPMsg("/t -b " +textField_2.getText());
+			textField_2.setText("");
+			btnNewButton_1.setEnabled(false);
 		}
 	}
 }
