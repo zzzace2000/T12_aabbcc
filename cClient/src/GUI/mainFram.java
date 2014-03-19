@@ -46,6 +46,7 @@ public class mainFram extends JFrame {
 	private JTextField textField_2;//enter txt
 	private JButton btnNewButton_1;
 	private JTabbedPane tabbedPane;
+	private JLabel userNameLabel ;
 	public JPanel allOnline;
     public JTextPane chatBoard = new JTextPane(); //lobby chat
 	
@@ -120,7 +121,7 @@ public class mainFram extends JFrame {
 				boolean success;
 				Vector<String> connection = conDialog.showDialog(mainFram.this, "連線");
 				theClient.connectToServer((String)connection.get(0), Integer.parseInt((String)connection.get(1)), (String)connection.get(2));
-				
+				userNameLabel.setText((String)connection.get(2)); 
 			}
 
 
@@ -235,8 +236,11 @@ public class mainFram extends JFrame {
 		stickers.setBounds(100, 9, 84, 23);
 		panel_2.add(stickers);
 		
+		userNameLabel = new JLabel("");
+		userNameLabel.setBounds(341, 9, 105, 17);
+		panel_2.add(userNameLabel);
+		
 		textField_2.addKeyListener(new checktypeListener());
-		allOnline.add(new JLabel("hello"));
 	}
         
          //////display///////
@@ -247,9 +251,7 @@ public class mainFram extends JFrame {
         }
         //display friends 
         public void disFrd (String name) {
-			//allOnline.add(new onlineLabel(name));
-        	System.out.println("in disFRD!");
-        	allOnline.add(new JLabel("hello"));
+			allOnline.add(new onlineLabel(name));
         }
 	public static void showAlertDialog(String alertMsg) {
 		// Write a pump up dialog that shows some alerts
