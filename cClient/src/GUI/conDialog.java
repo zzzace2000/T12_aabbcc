@@ -34,6 +34,7 @@ public class conDialog extends JDialog {
 	 */
 	public conDialog(JFrame parent, String title) {
 		super(parent, title, true);
+		setResizable(false);
 		setBounds(100, 100, 299, 227);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -77,7 +78,7 @@ public class conDialog extends JDialog {
 				values.add(textField.getText());
 				values.add(textField_1.getText());
 				values.add(textField_2.getText());
-				setVisible(false);
+				dispose();
 			}
 		});
 		btnNewButton.setIcon(new ImageIcon(conDialog.class.getResource("/Icon/network_connection-tmp.png")));
@@ -87,7 +88,7 @@ public class conDialog extends JDialog {
 		JButton btnNewButton_1 = new JButton("Cancel");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				setVisible(false);
+				dispose();
 			}
 		});
 		btnNewButton_1.setIcon(new ImageIcon(conDialog.class.getResource("/Icon/cancel.png")));

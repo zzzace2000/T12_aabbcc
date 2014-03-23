@@ -38,6 +38,8 @@ import conn.cClient;
 
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
 
 public class mainFram extends JFrame {
 	
@@ -48,6 +50,9 @@ public class mainFram extends JFrame {
 	private JTabbedPane tabbedPane;
 	private JPanel chatBoardPane;
 	private JLabel userNameLabel ;
+	private JScrollPane scrollPane;
+	private JScrollPane scrollPane_1;
+	private JScrollPane scrollPane_2;
 	public JPanel allOnline;
 	
 	/**
@@ -86,7 +91,9 @@ public class mainFram extends JFrame {
 		panel.setLayout(null);
 		panel.setPreferredSize(new Dimension(130, 362));
 		
-		JScrollPane scrollPane = new JScrollPane();
+		int v = ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
+	    int h = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED;
+		scrollPane = new JScrollPane(v,h);
 		scrollPane.setBounds(0, 25, 130, 174);
 		panel.add(scrollPane);
 		
@@ -99,7 +106,7 @@ public class mainFram extends JFrame {
 		scrollPane.setViewportView(allOnline);
 		allOnline.setLayout(new BoxLayout(allOnline, BoxLayout.Y_AXIS));
 		
-		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1 = new JScrollPane(v,h);
 		scrollPane_1.setBounds(0, 198, 130, 164);
 		panel.add(scrollPane_1);
 		
@@ -133,7 +140,7 @@ public class mainFram extends JFrame {
 		JButton btnNewButton_3 = new JButton("");
 		btnNewButton_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				abouts tmp = new abouts();
+				abouts  tmp = new abouts();
 				tmp.setVisible(true);
 			}
 		});
@@ -148,6 +155,11 @@ public class mainFram extends JFrame {
 		panel_1.setPreferredSize(new Dimension(456, 362));
 		
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+				//refresh the user in the specific room;
+			}
+		});
 		tabbedPane.setBounds(0, 0, 458, 269);
 		panel_1.add(tabbedPane);
 		
@@ -157,13 +169,13 @@ public class mainFram extends JFrame {
 		tablabel main = new tablabel("大廳", panel_3);
 		panel_3.setLayout(new BorderLayout(0, 0));
 		
-		JScrollPane scrollPane_2 = new JScrollPane();
+		scrollPane_2 = new JScrollPane(v,h);
 		panel_3.add(scrollPane_2, BorderLayout.CENTER);
 		
 		chatBoardPane = new JPanel();
 		chatBoardPane.setBackground(Color.WHITE);
 		scrollPane_2.setViewportView(chatBoardPane);
-		chatBoardPane.setLayout(new BoxLayout(chatBoardPane, BoxLayout.Y_AXIS));
+		chatBoardPane.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		tabbedPane.setTabComponentAt(0, main);
 		
 		JPanel panel_4 = new JPanel();
@@ -200,46 +212,32 @@ public class mainFram extends JFrame {
 		panel_2.setLayout(null);
 		
 		textField_2 = new JTextField();
-		textField_2.setBounds(10, 36, 377, 49);
+		textField_2.setBounds(10, 36, 291, 49);
 		panel_2.add(textField_2);
 		textField_2.setColumns(10);
 		
 		btnNewButton_1 = new JButton("");
 		btnNewButton_1.setEnabled(false);
 		btnNewButton_1.setIcon(new ImageIcon(mainFram.class.getResource("/Icon/tosend.png")));
-		btnNewButton_1.setBounds(397, 36, 49, 49);
+		btnNewButton_1.setBounds(311, 36, 49, 49);
 		panel_2.add(btnNewButton_1);
-                /*btnNewButton_1.addActionListener(new ActionListener(){
-                    public void actionPerformed(ActionEvent e) {
-                        //System.out.println(textField_2.getText());
-                        //chatBoard.replaceSelection("hello!!");
-                        theClient.sendPMsg("/t " +textField_2.getText());
-                        
-                    }
-                });*/
-                
-                
-                
-		JComboBox comboBox = new JComboBox();
-		comboBox.setBounds(37, 9, 42, 23);
-		panel_2.add(comboBox);
-		
-		JButton btnNewButton_2 = new JButton("");
-		btnNewButton_2.setBounds(10, 9, 29, 23);
-		panel_2.add(btnNewButton_2);
-		
-		JSeparator separator = new JSeparator();
-		separator.setOrientation(SwingConstants.VERTICAL);
-		separator.setBounds(89, 11, 1, 21);
-		panel_2.add(separator);
 		
 		JButton stickers = new JButton("strickers");
-		stickers.setBounds(100, 9, 84, 23);
+		stickers.setBounds(10, 9, 84, 23);
 		panel_2.add(stickers);
 		
 		userNameLabel = new JLabel("");
-		userNameLabel.setBounds(341, 9, 105, 17);
+		userNameLabel.setBounds(255, 9, 105, 17);
 		panel_2.add(userNameLabel);
+		
+		JPanel panel_6 = new JPanel();
+		panel_6.setBackground(Color.WHITE);
+		panel_6.setBounds(370, 9, 76, 76);
+		panel_2.add(panel_6);
+		
+		JLabel lblNewLabel = new JLabel("");
+		lblNewLabel.setIcon(new ImageIcon(mainFram.class.getResource("/Icon/notSetFace.png")));
+		panel_6.add(lblNewLabel);
 		
 		textField_2.addKeyListener(new checktypeListener());
 		
@@ -251,15 +249,20 @@ public class mainFram extends JFrame {
          //////display///////
         //display chat conten
         public void disTxt (String from, String msg) {
-            //JTextPane tmp = new JTextPane();
-        	JLabel tmp = new JLabel();
+            JTextPane tmp = new JTextPane();
+            tmp.setEditable(false);
             tmp.setText(from + ":" + msg);
+            tmp.setPreferredSize(new Dimension(405,16));
             chatBoardPane.add(tmp);
-            System.out.println("here");
+            chatBoardPane.validate();
+            scrollPane_2.validate();
         }
         //display friends 
         public void disFrd (String name) {
-			allOnline.add(new onlineLabel(name));
+        	onlineLabel tmp = new onlineLabel(name);
+			allOnline.add(tmp);
+			allOnline.validate();
+			scrollPane.validate();
         }
 	public static void showAlertDialog(String alertMsg) {
 		// Write a pump up dialog that shows some alerts
@@ -299,16 +302,45 @@ public class mainFram extends JFrame {
 		JButton exit;
 		JLabel tabname;
 		JPanel owner;
+		JPopupMenu chatroomPopMenu;
 		
 		tablabel(String name, JPanel tmp){
+			chatroomPopMenu = new JPopupMenu();
+			JMenuItem pmExit = new JMenuItem("離開此聊天室"), pmAdd = new JMenuItem("加入使用者");
+			pmExit.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e){
+					tabbedPane.remove(tabbedPane.indexOfComponent(owner));
+				}
+			});
+			pmAdd.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e){
+					String addFriend = latterAddUser.showDialog(mainFram.this, "加入使用者");
+					//等待後臺
+				}
+			});
+			chatroomPopMenu.add(pmAdd);
+			chatroomPopMenu.add(pmExit);
+			addMouseListener(new MouseAdapter(){
+				public void mouseClicked(MouseEvent e){
+					if(e.getButton() == MouseEvent.BUTTON3)
+						chatroomPopMenu.show(tablabel.this, e.getX(), e.getY());
+					else if(e.getButton() == MouseEvent.BUTTON1)
+						tabbedPane.setSelectedComponent(owner);
+				}
+			});
 			owner = tmp;
 			tabname = new JLabel(name);
 			exit = new JButton(new ImageIcon(mainFram.class.getResource("/Icon/tabcancel.png")));
 			exit.setPreferredSize(new Dimension(8,8));
 			exit.addActionListener(this);
-			if(name == "大廳") exit.setEnabled(false);
+			if(name == "大廳"){ 
+				exit.setEnabled(false);
+				pmExit.setEnabled(false);
+				pmAdd.setEnabled(false);
+			}
 			add(tabname);
 			add(exit);
+			setToolTipText("right click to see more");
 		}
 		public void actionPerformed(ActionEvent e){
 			tabbedPane.remove(tabbedPane.indexOfComponent(owner));
@@ -318,6 +350,7 @@ public class mainFram extends JFrame {
 		public void mouseClicked(MouseEvent e) {
 			Vector connection = newChatroom.showDialog(mainFram.this, "Create new room");
 			JPanel tmpPan = new JPanel();
+			tmpPan.setBackground(Color.WHITE);
 			tablabel tmp = new tablabel((String)connection.get(0), tmpPan);
 			tabbedPane.add(tmpPan, tabbedPane.getTabCount()-1);
 			tabbedPane.setTabComponentAt(tabbedPane.indexOfComponent(tmpPan), tmp);

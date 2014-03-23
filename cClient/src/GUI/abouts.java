@@ -22,6 +22,7 @@ public class abouts extends JFrame {
 	 * Create the frame.
 	 */
 	public abouts() {
+		setResizable(false);
 		setTitle("Abouts");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(abouts.class.getResource("/Icon/about.png")));
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -58,7 +59,7 @@ public class abouts extends JFrame {
 		JButton btnNewButton = new JButton("Done");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				abouts.this.dispose();
+				dispose();
 			}
 		});
 		btnNewButton.setBounds(64, 130, 87, 23);
