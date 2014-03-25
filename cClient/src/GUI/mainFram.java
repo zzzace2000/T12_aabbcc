@@ -52,6 +52,7 @@ public class mainFram extends JFrame {
 	private JLabel userNameLabel ;
 	private JScrollPane scrollPane;
 	private JScrollPane scrollPane_1;
+	private JPanel panel_2;
 	public JPanel allOnline;
 	Vector<privateMessage> PM = new Vector<privateMessage>();
         Vector<newChatroom> ChR = new Vector<newChatroom> ();
@@ -126,7 +127,6 @@ public class mainFram extends JFrame {
 		JButton btnNewButton = new JButton("");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				boolean success;
 				Vector<String> connection = conDialog.showDialog(mainFram.this, "連線");
 				theClient.connectToServer((String)connection.get(0), Integer.parseInt((String)connection.get(1)), (String)connection.get(2));
 				userNameLabel.setText((String)connection.get(2)); 
@@ -197,7 +197,7 @@ public class mainFram extends JFrame {
 		Component verticalStrut_1 = Box.createVerticalStrut(71);
 		panel_4.add(verticalStrut_1, BorderLayout.SOUTH);
 		
-		JPanel panel_2 = new JPanel();
+		panel_2 = new JPanel();
 		panel_2.setBounds(0, 267, 456, 95);
 		panel_1.add(panel_2);
 		panel_2.setLayout(null);
@@ -213,8 +213,24 @@ public class mainFram extends JFrame {
 		btnNewButton_1.setBounds(311, 36, 49, 49);
 		panel_2.add(btnNewButton_1);
 		
-		JButton stickers = new JButton("strickers");
+		JButton stickers = new JButton(new ImageIcon(mainFram.class.getResource("/Icon/emotionButtonIcon.png")));
 		stickers.setBounds(10, 9, 84, 23);
+		stickers.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				JPopupMenu tmpMenu = new JPopupMenu();
+				for(int i = 1; i < 7; ++i){
+					JMenuItem tmp = new JMenuItem(new ImageIcon(mainFram.class.getResource("/Icon/emotion" + i + "-key.png")));
+					tmp.addActionListener(new ActionListener(){
+						public void actionPerformed(ActionEvent e){
+							//send stickers by cClient
+						}
+					});
+					tmpMenu.add(tmp);
+				}
+				tmpMenu.show(panel_2,10,9);
+			}
+			
+		});
 		panel_2.add(stickers);
 		
 		userNameLabel = new JLabel("");
@@ -235,6 +251,11 @@ public class mainFram extends JFrame {
 		snedButton sendListener = new snedButton();
 		textField_2.addActionListener(sendListener);
 		btnNewButton_1.addActionListener(sendListener);
+		
+		//first time open the application and try to link server
+		Vector<String> connection = conDialog.showDialog(mainFram.this, "連線");
+		theClient.connectToServer((String)connection.get(0), Integer.parseInt((String)connection.get(1)), (String)connection.get(2));
+		userNameLabel.setText((String)connection.get(2)); 
 	}
         
          //////display///////
