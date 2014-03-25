@@ -22,6 +22,7 @@ import javax.swing.JTextField;
 import javax.swing.ImageIcon;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import javax.swing.JOptionPane;
 
 public class privateMessage extends JFrame {
 
@@ -120,10 +121,17 @@ public class privateMessage extends JFrame {
 		separator_3.setBounds(295, 7, 1, 21);
 		panel.add(separator_3);
 		
-		JButton button_3 = new JButton("");
-		button_3.setIcon(new ImageIcon(privateMessage.class.getResource("/Icon/file.png")));
-		button_3.setBounds(306, 5, 29, 23);
-		panel.add(button_3);
+		JButton filebutton = new JButton("");
+		filebutton.setIcon(new ImageIcon(privateMessage.class.getResource("/Icon/file.png")));
+		filebutton.setBounds(306, 5, 29, 23);
+		panel.add(filebutton);
+                filebutton.addActionListener(new ActionListener(){
+                    public void actionPerformed(ActionEvent e) {
+                        //System.out.println("hi sendfile");
+                        String fileName = JOptionPane.showInputDialog(null,"sendingFile");                        
+                       theClient.sendFile (talkTo, fileName);   
+                    }
+                });
 		
 		JScrollPane scrollPane = new JScrollPane();
 		contentPane.add(scrollPane, BorderLayout.CENTER);

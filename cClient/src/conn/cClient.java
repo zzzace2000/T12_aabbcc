@@ -33,8 +33,8 @@ public class cClient implements Runnable{
 	//members about self-informaion
 	String name;
         Vector<String> onList = new Vector<String>();
-        String fileName;
-        File file;
+        //String fileName;
+        //File file;
         
 	public cClient() {
 		frame = new mainFram(cClient.this);
@@ -137,7 +137,7 @@ public class cClient implements Runnable{
         //////helper functions//////
         //update online friend list
         public void newOnline(String newName){
-            //.println("new friend in :"+ newName);
+            System.out.println("new friend in :"+ newName);
             frame.disFrd(newName);
         }
         
@@ -179,11 +179,13 @@ public class cClient implements Runnable{
 		}
 	}
         
-        public void sendFile () {
+        public void sendFile (String rec, String fileName) {
             try {
-                output.writeUTF("/f");
+                File file = new File(fileName);
+                //would this message be separated with the file itself??
+                output.writeUTF("/f -s "+ rec + " "+file.length()+ " " +fileName);
                 PrintStream printStream = new PrintStream(socket.getOutputStream());
-                printStream.println(file.getName());
+                //printStream.println("/f -s "+ rec + " "+fileName);
             
                 System.out.print("transmitting...");
             
@@ -195,7 +197,8 @@ public class cClient implements Runnable{
                     Thread.yield();
                 }
                 printStream.flush();
-                printStream.close();
+                //printStream.close();
+                //i have to change this into something else inorder not to close the socket but can pass end of file...
                 inputStream.close();
                 
                 System.out.println("transmitting completed!");

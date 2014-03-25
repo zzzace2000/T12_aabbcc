@@ -87,7 +87,8 @@ public class conn_thread implements Runnable{
                 transPMsg(msg.substring(3));
             }
             else if (msg.startsWith("/f")) {
-                transFile();
+                if ((msg.substring(3)).startsWith("-s"))
+                    transFile(msg.substring(6));
             }
             }
             catch(IOException e){
@@ -97,23 +98,43 @@ public class conn_thread implements Runnable{
 	}
         
         /////receiving/////
-          private void transFile() {
+          private void transFile(String msg) {
             try{
-                 String fileName = new BufferedReader(new InputStreamReader(sock.getInputStream())).readLine();
-                 System.out.printf("receiving file: %s", fileName);
+                 //String fileName = new BufferedReader(new InputStreamReader(sock.getInputStream())).readLine();
+                 //System.out.printf("receiving file: %s", fileName);
+                System.out.println("in transFile " +msg);
+                /*String [] splitMsg = msg.split(" ");
+                String rec = splitMsg[0];
+                String fileName = splitMsg[1];*/
+                int space1 = msg.indexOf(" ");
+                String rec = msg.substring(0, space1);//space1 not included
+                String remain = msg.substring(space1+1);
+                int space2 = remain.indexOf(" ");
+                int fileLength = Integer.parseInt(remain.substring(0, space2));
+                                            
                                             
                  BufferedInputStream inputStream = new BufferedInputStream(sock.getInputStream());
-                 BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(fileName));
+                //BufferedInputStream inputStream = new BufferedInputStream(input);
+                 BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream("C:\\Users\\Kimberly Hsiao\\Documents\\NetBeansProjects\\fileClient\\build\\classes\\Icon\\ironman_2.jpg"));
                                           
                  int readin;
-                 while((readin = inputStream.read()) != -1) {
+                /* while((readin = inputStream.read()) != -1) {
                     outputStream.write(readin);
                     Thread.yield();
+                 }*/
+                 int count = 0;
+                 while (count<fileLength) {
+                     readin = inputStream.read();
+                     outputStream.write(readin);
+                     count++;
+                     Thread.yield();
                  }
                                             
                  outputStream.flush();
                  outputStream.close();
-                 inputStream.close();
+                 //inputStream.close();
+                                            
+                 //sock.close();
                                             
                  System.out.println("recieving completed!");
                 
