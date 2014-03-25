@@ -22,6 +22,9 @@ import javax.swing.JTextField;
 import javax.swing.ImageIcon;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 public class privateMessage extends JFrame {
 
@@ -30,6 +33,9 @@ public class privateMessage extends JFrame {
 	private JPanel contentPane;
 	private JTextField textField;
 	private JButton sendButton;
+        private final static 
+        String DEFAULT_FILE_PATH = "C:\\Users\\Kimberly Hsiao\\Documents\\NetBeansProjects\\fileClient\\build\\classes\\Icon";
+        
 	/**
 	 * Create the frame.
 	 */
@@ -52,6 +58,19 @@ public class privateMessage extends JFrame {
 		separator.setBounds(211, 5, 2, 0);
 		separator.setOrientation(SwingConstants.VERTICAL);
 		panel.add(separator);
+		
+		JSeparator separator_1 = new JSeparator();
+		separator_1.setOrientation(SwingConstants.VERTICAL);
+		separator_1.setBounds(89, 7, 1, 21);
+		panel.add(separator_1);
+		
+		JComboBox comboBox = new JComboBox();
+		comboBox.setBounds(37, 5, 42, 23);
+		panel.add(comboBox);
+		
+		JButton button = new JButton("");
+		button.setBounds(10, 5, 29, 23);
+		panel.add(button);
 		
 		JButton button_1 = new JButton("strickers");
 		button_1.setBounds(10, 5, 84, 23);
@@ -107,10 +126,33 @@ public class privateMessage extends JFrame {
 		separator_3.setBounds(208, 7, 1, 21);
 		panel.add(separator_3);
 		
-		JButton button_3 = new JButton("");
-		button_3.setIcon(new ImageIcon(privateMessage.class.getResource("/Icon/file.png")));
-		button_3.setBounds(219, 5, 29, 23);
-		panel.add(button_3);
+		JButton filebutton = new JButton("");
+		filebutton.setIcon(new ImageIcon(privateMessage.class.getResource("/Icon/file.png")));
+		filebutton.setBounds(306, 5, 29, 23);
+		panel.add(filebutton);
+                filebutton.addActionListener(new ActionListener(){
+                    public void actionPerformed(ActionEvent e) {
+                        //System.out.println("hi sendfile");
+                        //String fileName = JOptionPane.showInputDialog(null,"sendingFile");                        
+                        String fileName = "";
+                        File file = new File("");
+                       
+                        JFileChooser fcObj = new JFileChooser(DEFAULT_FILE_PATH); 
+                        int result = -1;
+			fcObj.setDialogTitle("開啟舊檔");
+                        result = fcObj.showOpenDialog(privateMessage.this);
+                        if(result == JFileChooser.APPROVE_OPTION){
+                            file = fcObj.getSelectedFile();
+                            //取得檔案選擇器選取的檔案
+                            //fileName = file.getName();                            
+
+                    }
+			else if(result == JFileChooser.CANCEL_OPTION){
+
+			} 
+                        theClient.sendFile (talkTo, file);
+                    }
+                });
 		
 		JScrollPane scrollPane = new JScrollPane();
 		contentPane.add(scrollPane, BorderLayout.CENTER);
