@@ -22,6 +22,8 @@ import javax.swing.JTextField;
 import javax.swing.ImageIcon;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 public class privateMessage extends JFrame {
@@ -31,6 +33,9 @@ public class privateMessage extends JFrame {
 	private JPanel contentPane;
 	private JTextField textField;
 	private JButton sendButton;
+        private final static 
+        String DEFAULT_FILE_PATH = "C:\\Users\\Kimberly Hsiao\\Documents\\NetBeansProjects\\fileClient\\build\\classes\\Icon";
+        
 	/**
 	 * Create the frame.
 	 */
@@ -128,8 +133,24 @@ public class privateMessage extends JFrame {
                 filebutton.addActionListener(new ActionListener(){
                     public void actionPerformed(ActionEvent e) {
                         //System.out.println("hi sendfile");
-                        String fileName = JOptionPane.showInputDialog(null,"sendingFile");                        
-                       theClient.sendFile (talkTo, fileName);   
+                        //String fileName = JOptionPane.showInputDialog(null,"sendingFile");                        
+                        String fileName = "";
+                        File file = new File("");
+                       
+                        JFileChooser fcObj = new JFileChooser(DEFAULT_FILE_PATH); 
+                        int result = -1;
+			fcObj.setDialogTitle("開啟舊檔");
+                        result = fcObj.showOpenDialog(privateMessage.this);
+                        if(result == JFileChooser.APPROVE_OPTION){
+                            file = fcObj.getSelectedFile();
+                            //取得檔案選擇器選取的檔案
+                            //fileName = file.getName();                            
+
+                    }
+			else if(result == JFileChooser.CANCEL_OPTION){
+
+			} 
+                        theClient.sendFile (talkTo, file);
                     }
                 });
 		
@@ -141,4 +162,5 @@ public class privateMessage extends JFrame {
 		messagePane.setLayout(new BoxLayout(messagePane, BoxLayout.Y_AXIS));
 		scrollPane.setViewportView(messagePane);
 	}
+        
 }

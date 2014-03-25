@@ -20,17 +20,21 @@ import java.awt.event.ActionEvent;
 
 public class newChatroom extends JDialog {
 
-	private final JPanel contentPanel = new JPanel();
+	private mainFram frame;
+        private final JPanel contentPanel = new JPanel();
 	private JTextField textField;
 	private JTable table;
-	private Vector values = new Vector();
+        private JPanel frdPane;
+	private Vector values = new Vector(); //first element is chatroom name, second element is friend list
+        private Vector<String> rmFrd = new Vector<String>();
 	private JLabel lblNewLabel;
+        
 
 	/**
 	 * Create the dialog.
 	 */
-	public newChatroom(JFrame parent, String title) {
-		super(parent, title, true);
+	public newChatroom(Vector<String> allOnline, JFrame parent, String title) {
+		super(parent, title, true);                
 		setAlwaysOnTop(true);
 		setTitle("create new chat room");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(newChatroom.class.getResource("/Icon/Chattmp.png")));
@@ -43,15 +47,26 @@ public class newChatroom extends JDialog {
 		JLabel lblChatroomName = new JLabel("Chatroom name");
 		lblChatroomName.setBounds(10, 10, 95, 15);
 		contentPanel.add(lblChatroomName);
+                
 		
+                
 		textField = new JTextField();
 		textField.setBounds(10, 31, 216, 21);
 		contentPanel.add(textField);
 		textField.setColumns(10);
-		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setBounds(10, 62, 117, 21);
-		contentPanel.add(comboBox);
+	
+		JComboBox friendBox = new JComboBox(allOnline);
+		friendBox.setBounds(10, 62, 117, 21);
+		contentPanel.add(friendBox);
+                friendBox.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e){
+                       JComboBox selFrd = (JComboBox)e.getSource();
+                       String frd = (String)selFrd.getSelectedItem(); 
+                       frdPane.add(new JLabel(frd));
+                       rmFrd.add(frd);
+                       frdPane.validate();
+                    }
+                });
 		
 		JButton btnNewButton = new JButton("add");
 		btnNewButton.setBounds(137, 61, 89, 23);
@@ -65,8 +80,9 @@ public class newChatroom extends JDialog {
 		scrollPane.setBounds(10, 93, 117, 121);
 		contentPanel.add(scrollPane);
 		
-		table = new JTable();
-		scrollPane.setViewportView(table);
+		//table = new JTable();
+                frdPane = new JPanel();
+		scrollPane.setViewportView(frdPane);
 		
 		JButton btnNewButton_2 = new JButton("Create");
 		btnNewButton_2.addActionListener(new addListener());
@@ -88,16 +104,18 @@ public class newChatroom extends JDialog {
 		lblNewLabel.setBounds(10, 224, 380, 23);
 		contentPanel.add(lblNewLabel);
 	}
-	
+	//////helper funtions/////
 	public Vector getValues(){
 		return values;
 	}
 	
-	public static Vector showDialog(JFrame parent, String title){
-		newChatroom dialog = new newChatroom(parent, title);
+	public static Vector showDialog(Vector<String> allOnline, JFrame parent, String title){
+		newChatroom dialog = new newChatroom(allOnline, parent, title);
 		dialog.setVisible(true);
 		return dialog.getValues();
 	}
+        
+      
 	
 	class addListener implements ActionListener{
 		public void actionPerformed(ActionEvent arg0) {
@@ -107,6 +125,7 @@ public class newChatroom extends JDialog {
 				return;
 			}
 			values.add(textField.getText());
+                        values.add(rmFrd);
 			setVisible(false);
 		}
 	}
@@ -119,4 +138,6 @@ public class newChatroom extends JDialog {
 		}
 		return false;
 	}
+        
+        
 }

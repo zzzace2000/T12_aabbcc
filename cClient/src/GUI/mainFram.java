@@ -50,6 +50,7 @@ public class mainFram extends JFrame {
 	private JLabel userNameLabel ;
 	public JPanel allOnline;
 	Vector<privateMessage> PM = new Vector<privateMessage>();
+        Vector<newChatroom> ChR = new Vector<newChatroom> ();
         
 	/**
 	 * Launch the application.
@@ -73,7 +74,7 @@ public class mainFram extends JFrame {
 	public mainFram(cClient tc) {
 		theClient = tc;
 		setIconImage(Toolkit.getDefaultToolkit().getImage(mainFram.class.getResource("/Icon/1394654416_MESSAGES.png")));
-		setTitle("NMLAB ∫Ù¶hæ‘∂§-team12 ≤·§—´«");
+		setTitle("NMLAB Á∂≤Â§öÊà∞Èöä-team12 ËÅäÂ§©ÂÆ§");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 600, 400);
 		contentPane = new JPanel();
@@ -91,7 +92,7 @@ public class mainFram extends JFrame {
 		scrollPane.setBounds(0, 25, 130, 174);
 		panel.add(scrollPane);
 		
-		JLabel label = new JLabel("????®Á?");
+		JLabel label = new JLabel("ÊâÄÊúâÂú®Á∑ö");
 		label.setBackground(Color.WHITE);
 		scrollPane.setColumnHeaderView(label);
 		
@@ -104,7 +105,7 @@ public class mainFram extends JFrame {
 		scrollPane_1.setBounds(0, 198, 130, 164);
 		panel.add(scrollPane_1);
 		
-		JLabel label_1 = new JLabel("∑Ì´e≤·§—´«¶bΩu");
+		JLabel label_1 = new JLabel("Áï∂ÂâçËÅäÂ§©ÂÆ§Âú®Á∑ö");
 		scrollPane_1.setColumnHeaderView(label_1);
 		
 		JPanel thisChatroomOnline = new JPanel();
@@ -120,14 +121,14 @@ public class mainFram extends JFrame {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				boolean success;
-				Vector<String> connection = conDialog.showDialog(mainFram.this, "???");
+				Vector<String> connection = conDialog.showDialog(mainFram.this, "ÈÄ£Á∑ö");
 				theClient.connectToServer((String)connection.get(0), Integer.parseInt((String)connection.get(1)), (String)connection.get(2));
 				userNameLabel.setText((String)connection.get(2)); 
 			}
 
 
 		});
-		btnNewButton.setToolTipText("???");
+		btnNewButton.setToolTipText("ÈÄ£Á∑ö");
 		btnNewButton.setIcon(new ImageIcon(mainFram.class.getResource("/Icon/connection.png")));
 		panel_5.add(btnNewButton);
 		
@@ -140,7 +141,7 @@ public class mainFram extends JFrame {
 		});
 		btnNewButton_3.setIcon(new ImageIcon(mainFram.class.getResource("/Icon/about.png")));
 		panel_5.add(btnNewButton_3);
-		btnNewButton_3.setToolTipText("?úÊñº");
+		btnNewButton_3.setToolTipText("ÈóúÊñº");
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBounds(128, 0, 456, 362);
@@ -175,7 +176,7 @@ public class mainFram extends JFrame {
 		addpan.add(addLab);
 		tabbedPane.setTabComponentAt(tabbedPane.indexOfComponent(panel_4), addpan);
 		panel_4.setLayout(new BorderLayout(0, 0));
-		addpan.setToolTipText("∂}∑s≤·§—´«");
+		addpan.setToolTipText("ÈñãÊñ∞ËÅäÂ§©ÂÆ§");
 		
 		JButton btnCreatANew = new JButton("Create a new Chat room");
 		btnCreatANew.addActionListener(new addtabButton());
@@ -234,7 +235,7 @@ public class mainFram extends JFrame {
 		separator.setBounds(89, 11, 1, 21);
 		panel_2.add(separator);
 		
-		JButton stickers = new JButton("strickers");
+		JButton stickers = new JButton("stickers");
 		stickers.setBounds(100, 9, 84, 23);
 		panel_2.add(stickers);
 		
@@ -253,14 +254,17 @@ public class mainFram extends JFrame {
         //display chat conten
         public void disTxt (String from, String msg) {
             //JTextPane tmp = new JTextPane();
-        	JLabel tmp = new JLabel();
+            JLabel tmp = new JLabel();
             tmp.setText(from + ":" + msg);
             chatBoardPane.add(tmp);
+            chatBoardPane.validate();
             System.out.println("here");
         }
         //display friends 
         public void disFrd (String name) {
-			allOnline.add(new onlineLabel(name));
+            allOnline.add(new onlineLabel(name));
+            allOnline.validate();
+                        
         }
 	public static void showAlertDialog(String alertMsg) {
 		// Write a pump up dialog that shows some alerts
@@ -320,7 +324,7 @@ public class mainFram extends JFrame {
 	}
 	class addtab implements MouseListener{
 		public void mouseClicked(MouseEvent e) {
-			Vector connection = newChatroom.showDialog(mainFram.this, "Create new room");
+			Vector connection = newChatroom.showDialog(theClient.getAllOnline(), mainFram.this, "Create new room");
 			JPanel tmpPan = new JPanel();
 			tablabel tmp = new tablabel((String)connection.get(0), tmpPan);
 			tabbedPane.add(tmpPan, tabbedPane.getTabCount()-1);
@@ -334,7 +338,7 @@ public class mainFram extends JFrame {
 	}
 	class addtabButton implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			Vector connection = newChatroom.showDialog(mainFram.this, "Create new room");
+			Vector connection = newChatroom.showDialog(theClient.getAllOnline(), mainFram.this, "Create new room");
 			JPanel tmpPan = new JPanel();
 			tablabel tmp = new tablabel((String)connection.get(0), tmpPan);
 			tabbedPane.add(tmpPan, tabbedPane.getTabCount()-1);

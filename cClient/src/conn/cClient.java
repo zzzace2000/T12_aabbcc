@@ -126,6 +126,18 @@ public class cClient implements Runnable{
                     	System.out.println("in /o");
                         newOnline(msg.substring(3));
                     }
+                    else if (msg.startsWith("/f")) {
+                        String remain = msg.substring(3);
+                        if (remain.startsWith("-s")){
+                            
+                        }
+                        else if (remain.startsWith("-ox")){
+                            
+                        }
+                        else if (remain.startsWith("-r")){
+                            
+                        }
+                    }
                     else {
 			reconnect();
                     }
@@ -137,6 +149,7 @@ public class cClient implements Runnable{
         //////helper functions//////
         //update online friend list
         public void newOnline(String newName){
+            onList.add(newName);
             System.out.println("new friend in :"+ newName);
             frame.disFrd(newName);
         }
@@ -147,6 +160,10 @@ public class cClient implements Runnable{
 		}
 		return null;
 	}
+        
+        public Vector<String> getAllOnline(){
+            return onList;
+        }
         
         
         //////////functions for talking///////////
@@ -179,10 +196,11 @@ public class cClient implements Runnable{
 		}
 	}
         
-        public void sendFile (String rec, String fileName) {
+        public void sendFile (String rec, File file) {
             try {
-                File file = new File(fileName);
+                //File file = new File(fileName);
                 //would this message be separated with the file itself??
+                String fileName = file.getName();
                 output.writeUTF("/f -s "+ rec + " "+file.length()+ " " +fileName);
                 PrintStream printStream = new PrintStream(socket.getOutputStream());
                 //printStream.println("/f -s "+ rec + " "+fileName);
@@ -193,9 +211,13 @@ public class cClient implements Runnable{
             
                 int readin;
                 while ((readin = inputStream.read()) != -1) {
+                   // System.out.print("hi");
+                    //output.write(readin);
                     printStream.write(readin);
                     Thread.yield();
                 }
+                //output.flush();
+                
                 printStream.flush();
                 //printStream.close();
                 //i have to change this into something else inorder not to close the socket but can pass end of file...
@@ -211,14 +233,26 @@ public class cClient implements Runnable{
         }
         
         //receiving
+        //has to be refined to broadcast and whisper case
         private void recPMsg(String tx) {
             System.out.println("in recPMsg :"+tx);
-            int parse = tx.indexOf(" ");
+            String[] splitTx = tx.split(" ");
+            
+            //seperate to braodcast and whisper case
+            if (splitTx[0].equals("-b")) {
+                //default in lobby
+                frame.disTxt(splitTx[2], splitTx[3]);
+            }
+            else if (splitTx[1].equals("-w")) {
+                
+            }
+            
+           /* int parse = tx.indexOf(" ");
             String from = tx.substring(0, parse);
             String msgOnB = tx.substring(parse+1);
             //System.out.println(msgOnB);
             //frame.chatBoard.replaceSelection(from + " " + msgOnB);
-            frame.disTxt(from, msgOnB);
+            frame.disTxt(from, msgOnB);*/
         }
         
         
