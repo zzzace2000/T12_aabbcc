@@ -246,6 +246,8 @@ public class mainFram extends JFrame {
             chatBoardPane.add(tmp);
             chatBoardPane.validate();
             System.out.println("here");
+            /*
+             */
         }
         //display friends 
         public void disFrd (String name) {
@@ -355,7 +357,7 @@ public class mainFram extends JFrame {
 	}
 	class addtabButton implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			Vector connection = newChatroom.showDialog(mainFram.this, "Create new room");
+			Vector connection = newChatroom.showDialog(theClient.getAllOnline(), mainFram.this, "Create new room");
 			chatroomPane newChatroomPane = new chatroomPane((String)connection.get(0));
 			tablabel tmp = new tablabel((String)connection.get(0), newChatroomPane);
 			tabbedPane.add(newChatroomPane, tabbedPane.getTabCount()-1);
@@ -364,6 +366,8 @@ public class mainFram extends JFrame {
 	}
 	class snedButton implements ActionListener{
 		public void actionPerformed(ActionEvent e){
+			if(textField_2.getText().length() == 0)
+				return;
 			theClient.sendPMsg("/t -b " +textField_2.getText());
 			textField_2.setText("");
 			btnNewButton_1.setEnabled(false);

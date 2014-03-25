@@ -3,6 +3,7 @@ import javax.swing.*;
 
 class chatroomPane extends JScrollPane{
 	private JTextPane innerPane ;
+	private int chatroomID;
 	public String name;
 	chatroomPane(String tmpname){
 		super(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
