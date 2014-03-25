@@ -49,7 +49,8 @@ public class mainFram extends JFrame {
 	private JPanel chatBoardPane;
 	private JLabel userNameLabel ;
 	public JPanel allOnline;
-	
+	Vector<privateMessage> PM = new Vector<privateMessage>();
+        
 	/**
 	 * Launch the application.
 	 */
@@ -72,7 +73,7 @@ public class mainFram extends JFrame {
 	public mainFram(cClient tc) {
 		theClient = tc;
 		setIconImage(Toolkit.getDefaultToolkit().getImage(mainFram.class.getResource("/Icon/1394654416_MESSAGES.png")));
-		setTitle("NMLAB Á∂≤Â§öÊà∞Èöä-team12 ËÅäÂ§©ÂÆ§");
+		setTitle("NMLAB ∫Ù¶hæ‘∂§-team12 ≤·§—´«");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 600, 400);
 		contentPane = new JPanel();
@@ -90,7 +91,7 @@ public class mainFram extends JFrame {
 		scrollPane.setBounds(0, 25, 130, 174);
 		panel.add(scrollPane);
 		
-		JLabel label = new JLabel("ÊâÄÊúâÂú®Á∑ö");
+		JLabel label = new JLabel("????®Á?");
 		label.setBackground(Color.WHITE);
 		scrollPane.setColumnHeaderView(label);
 		
@@ -103,7 +104,7 @@ public class mainFram extends JFrame {
 		scrollPane_1.setBounds(0, 198, 130, 164);
 		panel.add(scrollPane_1);
 		
-		JLabel label_1 = new JLabel("Áï∂ÂâçËÅäÂ§©ÂÆ§Âú®Á∑ö");
+		JLabel label_1 = new JLabel("∑Ì´e≤·§—´«¶bΩu");
 		scrollPane_1.setColumnHeaderView(label_1);
 		
 		JPanel thisChatroomOnline = new JPanel();
@@ -119,14 +120,14 @@ public class mainFram extends JFrame {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				boolean success;
-				Vector<String> connection = conDialog.showDialog(mainFram.this, "ÈÄ£Á∑ö");
+				Vector<String> connection = conDialog.showDialog(mainFram.this, "???");
 				theClient.connectToServer((String)connection.get(0), Integer.parseInt((String)connection.get(1)), (String)connection.get(2));
 				userNameLabel.setText((String)connection.get(2)); 
 			}
 
 
 		});
-		btnNewButton.setToolTipText("ÈÄ£Á∑ö");
+		btnNewButton.setToolTipText("???");
 		btnNewButton.setIcon(new ImageIcon(mainFram.class.getResource("/Icon/connection.png")));
 		panel_5.add(btnNewButton);
 		
@@ -139,7 +140,7 @@ public class mainFram extends JFrame {
 		});
 		btnNewButton_3.setIcon(new ImageIcon(mainFram.class.getResource("/Icon/about.png")));
 		panel_5.add(btnNewButton_3);
-		btnNewButton_3.setToolTipText("ÈóúÊñº");
+		btnNewButton_3.setToolTipText("?úÊñº");
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBounds(128, 0, 456, 362);
@@ -174,7 +175,7 @@ public class mainFram extends JFrame {
 		addpan.add(addLab);
 		tabbedPane.setTabComponentAt(tabbedPane.indexOfComponent(panel_4), addpan);
 		panel_4.setLayout(new BorderLayout(0, 0));
-		addpan.setToolTipText("ÈñãÊñ∞ËÅäÂ§©ÂÆ§");
+		addpan.setToolTipText("∂}∑s≤·§—´«");
 		
 		JButton btnCreatANew = new JButton("Create a new Chat room");
 		btnCreatANew.addActionListener(new addtabButton());
@@ -276,7 +277,7 @@ public class mainFram extends JFrame {
 		}
 	}
 	class onlineLabel extends JLabel implements MouseListener{
-		private privateMessage PM;
+		//private privateMessage PM;
                 String talkTo;
 		onlineLabel(String name){
                     talkTo = name;
@@ -286,9 +287,12 @@ public class mainFram extends JFrame {
 			addMouseListener(this);
 		}
 		public void mouseClicked(MouseEvent arg0) {
-			if(arg0.getClickCount() == 2)
-					PM = new privateMessage(theClient,talkTo);
-					PM.setVisible(true);
+			if(arg0.getClickCount() == 2) {
+                            PM.add(new privateMessage(theClient, talkTo));
+                            (PM.lastElement()).setVisible(true);
+                            //PM = new privateMessage(theClient,talkTo);
+                            //PM.setVisible(true);
+		}
 		}
 		public void mouseEntered(MouseEvent arg0) {}
 		public void mouseExited(MouseEvent arg0) {}
