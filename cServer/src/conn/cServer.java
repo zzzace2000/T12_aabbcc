@@ -8,18 +8,23 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import GUI.ServerFrame;
+
 import com.sun.org.apache.bcel.internal.generic.NEW;
 
 public class cServer {
 	
 	static int port = 5001;
-
+	
+	ServerFrame serverFrame;
 	ServerSocket ss;
 	Vector<conn_thread> conn_client = new Vector<conn_thread>();
 	ArrayList<String> nameList = new ArrayList<String>();
 	
 	public cServer() {
 		// initialize variable
+		serverFrame = new ServerFrame(this);
+		serverFrame.setVisible(true);
 		
 		try {
 			ss = new ServerSocket(port);
@@ -27,11 +32,11 @@ public class cServer {
 			while(true) {
 								
 				synchronized (this) {
-					System.out.println("Start listening");
+					serverFrame.log("Start listening");
 					Socket theSocket = ss.accept();
 					
 					// System show
-					System.out.println("Client connection");
+					serverFrame.log("Client connection");
 				
 					conn_client.add(new conn_thread(this, theSocket));
 				}
@@ -40,7 +45,7 @@ public class cServer {
 			}
 			
 		} catch (IOException e) {
-			System.out.println(e.toString());
+			serverFrame.log(e.toString());
 			e.printStackTrace();
 		}
 		
@@ -100,15 +105,23 @@ public class cServer {
             for (conn_thread i : conn_client) {
                 
                 if (i.getUserName() == rec) {
-                    System.out.println("name = "+ i.getUserName());
+                    serverFrame.log("name = "+ i.getUserName());
                     i.sendPMsg("/t " + from + " " + tx);
                 }
                 else if (i.getUserName() == from) {
                      i.sendPMsg("/t " + from + " " + tx);
-                     System.out.println("name = "+ i.getUserName());
+                     serverFrame.log("name = "+ i.getUserName());
                 }
             }
         }
+
+
+		public void broadCast(String text) {
+			serverFrame.log("Server broadcast: "+text);
+			for (conn_thread i : conn_client) {
+                i.sendPMsg("/t -b 0 server "+text);
+            }
+		}
 	
 	
 	

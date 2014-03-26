@@ -11,8 +11,11 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.SocketException;
 
-public class conn_thread implements Runnable{
+import GUI.ServerFrame;
 
+public class conn_thread implements Runnable{
+	
+	private ServerFrame mainFrame;
 	private Socket sock;
 	private cServer mainServer;
 	private DataInputStream input;
@@ -22,6 +25,7 @@ public class conn_thread implements Runnable{
 	public conn_thread(cServer mainServer, Socket sock) {
 		this.mainServer = mainServer;
 		this.sock = sock;
+		this.mainFrame = mainServer.mainFrame;
 		
 		try {
 			input = new DataInputStream( sock.getInputStream() );
@@ -64,6 +68,8 @@ public class conn_thread implements Runnable{
 
 	public void judge(String msg) {
             String name= null;
+            mainFrame.log("in judge: "+ msg);
+
             // username
             try {
             if (msg.startsWith("/u")) {
@@ -83,7 +89,6 @@ public class conn_thread implements Runnable{
                    }
             }
             else if (msg.startsWith("/t")){
-                System.out.println("in judge: "+ msg);
                 transPMsg(msg.substring(3));
             }
             else if (msg.startsWith("/f")) {
