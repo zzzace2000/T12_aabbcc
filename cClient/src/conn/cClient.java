@@ -121,6 +121,7 @@ public class cClient implements Runnable{
                     }
                     else if (msg.startsWith("/t")){
                         recPMsg(msg.substring(3));
+                        System.out.println("try to see "+msg.substring(3));
                     }
                     else if (msg.startsWith("/o")) {
                     	System.out.println("in /o");

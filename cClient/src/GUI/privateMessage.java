@@ -73,7 +73,7 @@ public class privateMessage extends JFrame {
 		panel.add(button);
 		
 		JButton button_1 = new JButton("strickers");
-		button_1.setBounds(100, 5, 84, 23);
+		button_1.setBounds(10, 5, 84, 23);
 		panel.add(button_1);
 		
 		textField = new JTextField();
@@ -103,27 +103,27 @@ public class privateMessage extends JFrame {
 		
 		JSeparator separator_2 = new JSeparator();
 		separator_2.setOrientation(SwingConstants.VERTICAL);
-		separator_2.setBounds(194, 7, 1, 21);
+		separator_2.setBounds(104, 7, 1, 21);
 		panel.add(separator_2);
 		
 		JButton soundButton = new JButton("");
 		soundButton.setIcon(new ImageIcon(privateMessage.class.getResource("/Icon/soundicon.png")));
-		soundButton.setBounds(202, 5, 29, 23);
+		soundButton.setBounds(115, 5, 29, 23);
 		panel.add(soundButton);
 		
 		JButton voiceButton = new JButton("");
 		voiceButton.setIcon(new ImageIcon(privateMessage.class.getResource("/Icon/mic.png")));
-		voiceButton.setBounds(229, 5, 29, 23);
+		voiceButton.setBounds(142, 5, 29, 23);
 		panel.add(voiceButton);
 		
 		JButton button_2 = new JButton("");
 		button_2.setIcon(new ImageIcon(privateMessage.class.getResource("/Icon/video.png")));
-		button_2.setBounds(256, 5, 29, 23);
+		button_2.setBounds(169, 5, 29, 23);
 		panel.add(button_2);
 		
 		JSeparator separator_3 = new JSeparator();
 		separator_3.setOrientation(SwingConstants.VERTICAL);
-		separator_3.setBounds(295, 7, 1, 21);
+		separator_3.setBounds(208, 7, 1, 21);
 		panel.add(separator_3);
 		
 		JButton filebutton = new JButton("");
@@ -162,5 +162,4 @@ public class privateMessage extends JFrame {
 		messagePane.setLayout(new BoxLayout(messagePane, BoxLayout.Y_AXIS));
 		scrollPane.setViewportView(messagePane);
 	}
-        
 }

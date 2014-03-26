@@ -34,7 +34,8 @@ public class newChatroom extends JDialog {
 	 * Create the dialog.
 	 */
 	public newChatroom(Vector<String> allOnline, JFrame parent, String title) {
-		super(parent, title, true);                
+		super(parent, title, true);
+		setResizable(false);
 		setAlwaysOnTop(true);
 		setTitle("create new chat room");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(newChatroom.class.getResource("/Icon/Chattmp.png")));
