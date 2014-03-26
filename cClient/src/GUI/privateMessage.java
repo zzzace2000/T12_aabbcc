@@ -131,6 +131,36 @@ public class privateMessage extends JFrame {
 		button_1.setIcon(new ImageIcon(privateMessage.class.getResource("/Icon/video.png")));
 		button_1.setBounds(168, 5, 29, 23);
 		panel.add(button_1);
+		
+		JSeparator separator_1 = new JSeparator();
+		separator_1.setOrientation(SwingConstants.VERTICAL);
+		separator_1.setBounds(208, 6, 1, 21);
+		panel.add(separator_1);
+		
+		JButton btnNewButton = new JButton("");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try{
+					int originalX = privateMessage.this.getLocationOnScreen().x;
+					int originalY = privateMessage.this.getLocationOnScreen().y;
+					for(int i = 0; i < 10; ++i){
+						Thread.sleep(10);
+						privateMessage.this.setLocation(originalX, originalY+5);
+						Thread.sleep(10);
+						privateMessage.this.setLocation(originalX, originalY-5);
+						Thread.sleep(10);
+						privateMessage.this.setLocation(originalX+5, originalY);
+						Thread.sleep(10);
+						privateMessage.this.setLocation(originalX, originalY);
+					}
+				}catch(Exception err){
+					err.printStackTrace();
+				}
+			}
+		});
+		btnNewButton.setIcon(new ImageIcon(privateMessage.class.getResource("/Icon/vibrate.png")));
+		btnNewButton.setBounds(219, 6, 29, 23);
+		panel.add(btnNewButton);
                 filebutton.addActionListener(new ActionListener(){
                     public void actionPerformed(ActionEvent e) {
                         //System.out.println("hi sendfile");
@@ -140,11 +170,11 @@ public class privateMessage extends JFrame {
                        
                         JFileChooser fcObj = new JFileChooser(DEFAULT_FILE_PATH); 
                         int result = -1;
-			fcObj.setDialogTitle("?‹å??Šæ?");
+			fcObj.setDialogTitle("?ï¿½ï¿½??ï¿½ï¿½?");
                         result = fcObj.showOpenDialog(privateMessage.this);
                         if(result == JFileChooser.APPROVE_OPTION){
                             file = fcObj.getSelectedFile();
-                            //?–å?æª”æ??¸æ??¨é¸?–ç?æª”æ?
+                            //?ï¿½ï¿½?æª”ï¿½??ï¿½ï¿½??ï¿½é¸?ï¿½ï¿½?æª”ï¿½?
                             //fileName = file.getName();                            
 
                     }

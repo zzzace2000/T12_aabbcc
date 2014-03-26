@@ -233,6 +233,30 @@ public class mainFram extends JFrame {
 		});
 		panel_2.add(stickers);
 		
+		JButton shake = new JButton(new ImageIcon(mainFram.class.getResource("/Icon/vibrate.png")));
+		shake.setBounds(105, 9, 23, 23);
+		shake.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				try{
+					int originalX = mainFram.this.getLocationOnScreen().x;
+					int originalY = mainFram.this.getLocationOnScreen().y;
+					for(int i = 0; i < 10; ++i){
+						Thread.sleep(10);
+						mainFram.this.setLocation(originalX, originalY+5);
+						Thread.sleep(10);
+						mainFram.this.setLocation(originalX, originalY-5);
+						Thread.sleep(10);
+						mainFram.this.setLocation(originalX+5, originalY);
+						Thread.sleep(10);
+						mainFram.this.setLocation(originalX, originalY);
+					}
+				}catch(Exception err){
+					err.printStackTrace();
+				}
+			}
+		});
+		panel_2.add(shake);
+		
 		userNameLabel = new JLabel("");
 		userNameLabel.setBounds(255, 9, 105, 17);
 		panel_2.add(userNameLabel);
