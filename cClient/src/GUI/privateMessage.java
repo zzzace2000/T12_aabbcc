@@ -35,7 +35,7 @@ import javax.swing.JOptionPane;
 public class privateMessage extends JFrame {
 
         private cClient theClient;
-        private String talkTo;
+        private int talkTo;
 	private JPanel contentPane;
 	private JTextField textField;
 	private JButton sendButton;
@@ -47,7 +47,7 @@ public class privateMessage extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public privateMessage(cClient cc, String rec) {
+	public privateMessage(cClient cc, int rec) {
                 theClient = cc;
                 talkTo = rec;
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -61,6 +61,28 @@ public class privateMessage extends JFrame {
 		panel.setPreferredSize(new Dimension(50,90));
 		contentPane.add(panel, BorderLayout.SOUTH);
 		panel.setLayout(null);
+		
+		JSeparator separator = new JSeparator();
+		separator.setBounds(211, 5, 2, 0);
+		separator.setOrientation(SwingConstants.VERTICAL);
+		panel.add(separator);
+		
+		JSeparator separator_1 = new JSeparator();
+		separator_1.setOrientation(SwingConstants.VERTICAL);
+		separator_1.setBounds(89, 7, 1, 21);
+		panel.add(separator_1);
+		
+		JComboBox comboBox = new JComboBox();
+		comboBox.setBounds(37, 5, 42, 23);
+		panel.add(comboBox);
+		
+		JButton button = new JButton("");
+		button.setBounds(10, 5, 29, 23);
+		panel.add(button);
+		
+		JButton button_1 = new JButton("strickers");
+		button_1.setBounds(10, 5, 84, 23);
+		panel.add(button_1);
 		
 		textField = new JTextField();
 		textField.addKeyListener(new KeyAdapter() {
@@ -87,6 +109,26 @@ public class privateMessage extends JFrame {
                     }
                 });
 		
+		JSeparator separator_2 = new JSeparator();
+		separator_2.setOrientation(SwingConstants.VERTICAL);
+		separator_2.setBounds(104, 7, 1, 21);
+		panel.add(separator_2);
+		
+		JButton soundButton = new JButton("");
+		soundButton.setIcon(new ImageIcon(privateMessage.class.getResource("/Icon/soundicon.png")));
+		soundButton.setBounds(115, 5, 29, 23);
+		panel.add(soundButton);
+		
+		JButton voiceButton = new JButton("");
+		voiceButton.setIcon(new ImageIcon(privateMessage.class.getResource("/Icon/mic.png")));
+		voiceButton.setBounds(142, 5, 29, 23);
+		panel.add(voiceButton);
+		
+		JButton button_2 = new JButton("");
+		button_2.setIcon(new ImageIcon(privateMessage.class.getResource("/Icon/video.png")));
+		button_2.setBounds(169, 5, 29, 23);
+		panel.add(button_2);
+		
 		JSeparator separator_3 = new JSeparator();
 		separator_3.setOrientation(SwingConstants.VERTICAL);
 		separator_3.setBounds(107, 6, 1, 21);
@@ -97,8 +139,8 @@ public class privateMessage extends JFrame {
 		filebutton.setBounds(118, 5, 29, 23);
 		panel.add(filebutton);
 		
-		JButton button = new JButton("");
-		button.addActionListener(new ActionListener() {
+		JButton stickerButton = new JButton("");
+		stickerButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				JPopupMenu tmpMenu = new JPopupMenu();
 				for(int i = 1; i < 7; ++i){
@@ -113,29 +155,29 @@ public class privateMessage extends JFrame {
 				tmpMenu.show(panel,10,9);
 			}
 		});
-		button.setIcon(new ImageIcon(privateMessage.class.getResource("/Icon/emotionButtonIcon.png")));
-		button.setBounds(10, 5, 87, 23);
-		panel.add(button);
+		stickerButton.setIcon(new ImageIcon(privateMessage.class.getResource("/Icon/emotionButtonIcon.png")));
+		stickerButton.setBounds(10, 5, 87, 23);
+		panel.add(stickerButton);
 		
-		JSeparator separator = new JSeparator();
-		separator.setOrientation(SwingConstants.VERTICAL);
-		separator.setBounds(157, 6, 1, 21);
-		panel.add(separator);
+		JSeparator separator1 = new JSeparator();
+		separator1.setOrientation(SwingConstants.VERTICAL);
+		separator1.setBounds(157, 6, 1, 21);
+		panel.add(separator1);
 		
-		JButton button_1 = new JButton("");
-		button_1.addActionListener(new ActionListener() {
+		JButton videoButton = new JButton("");
+		videoButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				//open videoFrame;
 			}
 		});
-		button_1.setIcon(new ImageIcon(privateMessage.class.getResource("/Icon/video.png")));
-		button_1.setBounds(168, 5, 29, 23);
-		panel.add(button_1);
+		videoButton.setIcon(new ImageIcon(privateMessage.class.getResource("/Icon/video.png")));
+		videoButton.setBounds(168, 5, 29, 23);
+		panel.add(videoButton);
 		
-		JSeparator separator_1 = new JSeparator();
-		separator_1.setOrientation(SwingConstants.VERTICAL);
-		separator_1.setBounds(208, 6, 1, 21);
-		panel.add(separator_1);
+		JSeparator separator2 = new JSeparator();
+		separator2.setOrientation(SwingConstants.VERTICAL);
+		separator2.setBounds(208, 6, 1, 21);
+		panel.add(separator2);
 		
 		JButton btnNewButton = new JButton("");
 		btnNewButton.addActionListener(new ActionListener() {
@@ -170,7 +212,7 @@ public class privateMessage extends JFrame {
                        
                         JFileChooser fcObj = new JFileChooser(DEFAULT_FILE_PATH); 
                         int result = -1;
-			fcObj.setDialogTitle("?��??��?");
+			fcObj.setDialogTitle("開啟舊檔");
                         result = fcObj.showOpenDialog(privateMessage.this);
                         if(result == JFileChooser.APPROVE_OPTION){
                             file = fcObj.getSelectedFile();

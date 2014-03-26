@@ -17,6 +17,7 @@ import javax.swing.JScrollPane;
 import javax.swing.ImageIcon;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.util.Collections;
 
 public class newChatroom extends JDialog {
 

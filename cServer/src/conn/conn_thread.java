@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.SocketException;
-
+import java.util.Vector;
 import GUI.ServerFrame;
 
 public class conn_thread implements Runnable{
@@ -21,8 +21,10 @@ public class conn_thread implements Runnable{
 	private DataInputStream input;
 	private DataOutputStream output;
 	private String msg, username;
+        private int userID;
 	
-	public conn_thread(cServer mainServer, Socket sock) {
+	public conn_thread(cServer mainServer, int ID, Socket sock) {
+                userID = ID;
 		this.mainServer = mainServer;
 		this.sock = sock;
 		this.mainFrame = mainServer.serverFrame;
@@ -75,12 +77,12 @@ public class conn_thread implements Runnable{
             if (msg.startsWith("/u")) {
 		name = msg.substring(3);
 		System.out.println(name);
-                if (!mainServer.checkName(name)) {
+               
+                if ( !mainServer.checkName(name, userID) ) {
                    // Successfully create user
                     username = name;
-                    mainServer.synNewMem(username);
-                    output.writeUTF("/s" + mainServer.getAllOnl(name));
-                    
+                    mainServer.synNewMem(userID,username);
+                    output.writeUTF("/s " + userID + mainServer.getAllOnl(userID));                    
                   }
                   else {
                        // tell user to change another user name
@@ -94,6 +96,19 @@ public class conn_thread implements Runnable{
             else if (msg.startsWith("/f")) {
                 if ((msg.substring(3)).startsWith("-s"))
                     transFile(msg.substring(6));
+            }
+            else if (msg.startsWith("/nrm")) {
+                int space = (msg.substring(5)).indexOf(" ");
+                String roomName = msg.substring(5, space+5);
+                
+                Vector vs = mainServer.checkRoom(msg.substring(space+6));
+                if (((boolean)vs.get(0)) == true) {
+                    sendPMsg("/nrm -o "+ ((int)vs.get(1)));
+                }
+                else {
+                    //sendPMsg("/nrm -n "+ ((int)vs.get(1)) + " " + msg.substring(5));
+                    mainServer.synNewRoom(((int)vs.get(1)), roomName, msg.substring(5));
+                }
             }
             }
             catch(IOException e){
@@ -151,15 +166,19 @@ public class conn_thread implements Runnable{
         
          private void transPMsg(String msg) {
             //new version
-                 if (msg.startsWith("-b")) {
-                         //System.out.println("-b"+ msg);
-                        System.out.println("in transPMsg: "+ msg.substring(3));
-                        mainServer.broadcast(username,msg.substring(3));
-                    }
-                 else if (msg.startsWith("-w")) {
-                     String[] splitMsg = msg.split(" ");
-                     mainServer.whisper(splitMsg[1], username, splitMsg[2]);
-                 }
+	int space1 = msg.indexOf(" ");
+              String mode = msg.substring(0,space1);
+              String remain1 = msg.substring(space1+1);
+              int space2 = remain1.indexOf(" ");
+              String ID = remain1.substring(0,space2);
+              String tx = remain1.substring(space2+1);
+              if (mode.equals("-b")) {
+                   System.out.println("in transPMsg: "+ msg.substring(3));
+                   mainServer.broadcast(Integer.parseInt(ID), username,tx);
+              }
+              else if (mode.equals("-w")) {
+                  mainServer.whisper(Integer.parseInt(ID), userID, tx);
+              }                
             
             //original version
             /*try {
@@ -192,6 +211,9 @@ public class conn_thread implements Runnable{
                 }
 		return null;
 	}
+        public int getUserID () {
+            return userID;
+        }
 
 	
 	
