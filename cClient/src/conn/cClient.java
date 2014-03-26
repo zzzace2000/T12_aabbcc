@@ -80,7 +80,6 @@ public class cClient implements Runnable{
 		//return false;
 	}
 
-	@Override
 	public void run() {
 		try {
 			while (true) {
