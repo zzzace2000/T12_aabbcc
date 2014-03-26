@@ -122,7 +122,6 @@ public class cServer {
                 i.sendPMsg("/t -b 0 server "+text);
             }
 		}
-
 	
 	
 	
