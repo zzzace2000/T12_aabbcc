@@ -9,6 +9,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Toolkit;
 
 import javax.swing.ImageIcon;
@@ -38,6 +39,8 @@ import conn.cClient;
 
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
+import java.io.File;
+
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 
@@ -53,6 +56,7 @@ public class mainFram extends JFrame {
 	private JScrollPane scrollPane;
 	private JScrollPane scrollPane_1;
 	private JPanel panel_2;
+	private JLabel lblNewLabel;
 	public JPanel allOnline;
 	Vector<privateMessage> PM = new Vector<privateMessage>();
         Vector<newChatroom> ChR = new Vector<newChatroom> ();
@@ -251,8 +255,35 @@ public class mainFram extends JFrame {
 		panel_6.setBounds(370, 9, 76, 76);
 		panel_2.add(panel_6);
 		
-		JLabel lblNewLabel = new JLabel("");
+		lblNewLabel = new JLabel("");
 		lblNewLabel.setIcon(new ImageIcon(mainFram.class.getResource("/Icon/notSetFace.png")));
+		lblNewLabel.addMouseListener(new MouseAdapter(){
+			public void mouseClicked(MouseEvent e){
+				String fileName = "";
+				File file = new File("");
+				
+				JFileChooser fcObj = new JFileChooser("./");
+				int result = -1;
+				fcObj.setDialogTitle("選擇圖片");
+				result = fcObj.showOpenDialog(lblNewLabel);
+				if(result == JFileChooser.APPROVE_OPTION){
+					file = fcObj.getSelectedFile();
+					ImageIcon imageIcon = new ImageIcon(file.getAbsolutePath());
+					Image image = imageIcon.getImage();
+					int scaledH,scaledW;
+					if((imageIcon.getIconWidth()-76) > (imageIcon.getIconHeight()-76)){
+						scaledH = 76;
+						scaledW = imageIcon.getIconWidth()/(imageIcon.getIconHeight()/scaledH);
+					}
+					else{
+						scaledW = 76;
+						scaledH = imageIcon.getIconHeight()/(imageIcon.getIconWidth()/scaledW);
+					}
+					Image newimg = image.getScaledInstance(scaledW, scaledH,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+					lblNewLabel.setIcon(imageIcon = new ImageIcon(newimg));
+				}
+			}
+		});
 		panel_6.add(lblNewLabel);
 		
 		textField_2.addKeyListener(new checktypeListener());
