@@ -237,22 +237,7 @@ public class mainFram extends JFrame {
 		shake.setBounds(105, 9, 23, 23);
 		shake.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				try{
-					int originalX = mainFram.this.getLocationOnScreen().x;
-					int originalY = mainFram.this.getLocationOnScreen().y;
-					for(int i = 0; i < 10; ++i){
-						Thread.sleep(10);
-						mainFram.this.setLocation(originalX, originalY+5);
-						Thread.sleep(10);
-						mainFram.this.setLocation(originalX, originalY-5);
-						Thread.sleep(10);
-						mainFram.this.setLocation(originalX+5, originalY);
-						Thread.sleep(10);
-						mainFram.this.setLocation(originalX, originalY);
-					}
-				}catch(Exception err){
-					err.printStackTrace();
-				}
+				shake();
 			}
 		});
 		panel_2.add(shake);
@@ -306,6 +291,24 @@ public class mainFram extends JFrame {
 		System.out.println("Alert: "+alertMsg);
 	}
 	
+	public void shake(){
+		try{
+			int originalX = mainFram.this.getLocationOnScreen().x;
+			int originalY = mainFram.this.getLocationOnScreen().y;
+			for(int i = 0; i < 10; ++i){
+				Thread.sleep(10);
+				mainFram.this.setLocation(originalX, originalY+5);
+				Thread.sleep(10);
+				mainFram.this.setLocation(originalX, originalY-5);
+				Thread.sleep(10);
+				mainFram.this.setLocation(originalX+5, originalY);
+				Thread.sleep(10);
+				mainFram.this.setLocation(originalX, originalY);
+			}
+		}catch(Exception err){
+			err.printStackTrace();
+		}
+	}
 	
 	class checktypeListener extends KeyAdapter{
 		public void keyReleased(KeyEvent e){
