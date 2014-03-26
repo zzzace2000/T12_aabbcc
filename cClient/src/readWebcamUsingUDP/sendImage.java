@@ -17,14 +17,13 @@ import javax.imageio.ImageIO;
 
 public class sendImage implements Runnable{
 	
-	Main theMain;
+	MainRecorder theMain;
 	DatagramSocket theSocket;
 	OutputStream oStream;
 	String IP_TO_STREAM_TO;
 	int PORT_TO_STREAM_TO = 19998;
 	
-	public sendImage(Main mn) {
-		
+	public sendImage(MainRecorder mn) {
 
 		try {
 			
@@ -41,7 +40,7 @@ public class sendImage implements Runnable{
 	public void run() {
 		
 		try {
-			while(true) {
+			while(!Thread.currentThread().isInterrupted()) {
 				if (!theMain.imageBuffer.isEmpty()) {
 					System.out.println("Write something");
 					BufferedImage theImage = theMain.imageBuffer.remove(0);
@@ -82,5 +81,8 @@ public class sendImage implements Runnable{
 		}
 		System.out.println(theAddresString);
 		return theAddresString;
+	}
+
+	public void closeTheThread() {
 	}
 }
