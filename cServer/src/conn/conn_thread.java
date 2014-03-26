@@ -25,7 +25,7 @@ public class conn_thread implements Runnable{
 	public conn_thread(cServer mainServer, Socket sock) {
 		this.mainServer = mainServer;
 		this.sock = sock;
-		this.mainFrame = mainServer.mainFrame;
+		this.mainFrame = mainServer.serverFrame;
 		
 		try {
 			input = new DataInputStream( sock.getInputStream() );

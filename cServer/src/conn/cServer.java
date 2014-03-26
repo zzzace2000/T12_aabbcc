@@ -91,6 +91,7 @@ public class cServer {
                     i.sendPMsg("/o "+ newO);
                 }
             }
+            serverFrame.disFrd(newO);
         }
         
         /////functions for transmitting/////
@@ -117,7 +118,6 @@ public class cServer {
 
 
 		public void broadCast(String text) {
-			serverFrame.log("Server broadcast: "+text);
 			for (conn_thread i : conn_client) {
                 i.sendPMsg("/t -b 0 server "+text);
             }
