@@ -8,23 +8,18 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Vector;
 
-import GUI.ServerFrame;
-
 import com.sun.org.apache.bcel.internal.generic.NEW;
 
 public class cServer {
 	
 	static int port = 5001;
-	
-	ServerFrame serverFrame;
+
 	ServerSocket ss;
 	Vector<conn_thread> conn_client = new Vector<conn_thread>();
 	ArrayList<String> nameList = new ArrayList<String>();
 	
 	public cServer() {
 		// initialize variable
-		serverFrame = new ServerFrame(this);
-		serverFrame.setVisible(true);
 		
 		try {
 			ss = new ServerSocket(port);
@@ -32,11 +27,11 @@ public class cServer {
 			while(true) {
 								
 				synchronized (this) {
-					serverFrame.log("Start listening");
+					System.out.println("Start listening");
 					Socket theSocket = ss.accept();
 					
 					// System show
-					serverFrame.log("Client connection");
+					System.out.println("Client connection");
 				
 					conn_client.add(new conn_thread(this, theSocket));
 				}
@@ -45,7 +40,7 @@ public class cServer {
 			}
 			
 		} catch (IOException e) {
-			serverFrame.log(e.toString());
+			System.out.println(e.toString());
 			e.printStackTrace();
 		}
 		
@@ -91,7 +86,6 @@ public class cServer {
                     i.sendPMsg("/o "+ newO);
                 }
             }
-            serverFrame.disFrd(newO);
         }
         
         /////functions for transmitting/////
@@ -106,23 +100,15 @@ public class cServer {
             for (conn_thread i : conn_client) {
                 
                 if (i.getUserName() == rec) {
-                    serverFrame.log("name = "+ i.getUserName());
+                    System.out.println("name = "+ i.getUserName());
                     i.sendPMsg("/t " + from + " " + tx);
                 }
                 else if (i.getUserName() == from) {
                      i.sendPMsg("/t " + from + " " + tx);
-                     serverFrame.log("name = "+ i.getUserName());
+                     System.out.println("name = "+ i.getUserName());
                 }
             }
         }
-
-
-		public void broadCast(String text) {
-			for (conn_thread i : conn_client) {
-                i.sendPMsg("/t -b 0 server "+text);
-            }
-		}
-
 	
 	
 	

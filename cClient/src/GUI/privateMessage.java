@@ -28,7 +28,10 @@ import javax.swing.ImageIcon;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
+<<<<<<< HEAD
 
+=======
+>>>>>>> fff70132f209a0120a1f3be14415cabb1922da30
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
@@ -39,8 +42,11 @@ public class privateMessage extends JFrame {
 	private JPanel contentPane;
 	private JTextField textField;
 	private JButton sendButton;
+<<<<<<< HEAD
 	private JPanel panel ;
 	private videoFrame videochat;
+=======
+>>>>>>> fff70132f209a0120a1f3be14415cabb1922da30
         private final static 
         String DEFAULT_FILE_PATH = "C:\\Users\\Kimberly Hsiao\\Documents\\NetBeansProjects\\fileClient\\build\\classes\\Icon";
         
@@ -62,6 +68,31 @@ public class privateMessage extends JFrame {
 		contentPane.add(panel, BorderLayout.SOUTH);
 		panel.setLayout(null);
 		
+<<<<<<< HEAD
+=======
+		JSeparator separator = new JSeparator();
+		separator.setBounds(211, 5, 2, 0);
+		separator.setOrientation(SwingConstants.VERTICAL);
+		panel.add(separator);
+		
+		JSeparator separator_1 = new JSeparator();
+		separator_1.setOrientation(SwingConstants.VERTICAL);
+		separator_1.setBounds(89, 7, 1, 21);
+		panel.add(separator_1);
+		
+		JComboBox comboBox = new JComboBox();
+		comboBox.setBounds(37, 5, 42, 23);
+		panel.add(comboBox);
+		
+		JButton button = new JButton("");
+		button.setBounds(10, 5, 29, 23);
+		panel.add(button);
+		
+		JButton button_1 = new JButton("strickers");
+		button_1.setBounds(10, 5, 84, 23);
+		panel.add(button_1);
+		
+>>>>>>> fff70132f209a0120a1f3be14415cabb1922da30
 		textField = new JTextField();
 		textField.addKeyListener(new KeyAdapter() {
 			public void keyReleased(KeyEvent arg0) {
@@ -87,13 +118,40 @@ public class privateMessage extends JFrame {
                     }
                 });
 		
+<<<<<<< HEAD
 		JSeparator separator_3 = new JSeparator();
 		separator_3.setOrientation(SwingConstants.VERTICAL);
 		separator_3.setBounds(107, 6, 1, 21);
+=======
+		JSeparator separator_2 = new JSeparator();
+		separator_2.setOrientation(SwingConstants.VERTICAL);
+		separator_2.setBounds(104, 7, 1, 21);
+		panel.add(separator_2);
+		
+		JButton soundButton = new JButton("");
+		soundButton.setIcon(new ImageIcon(privateMessage.class.getResource("/Icon/soundicon.png")));
+		soundButton.setBounds(115, 5, 29, 23);
+		panel.add(soundButton);
+		
+		JButton voiceButton = new JButton("");
+		voiceButton.setIcon(new ImageIcon(privateMessage.class.getResource("/Icon/mic.png")));
+		voiceButton.setBounds(142, 5, 29, 23);
+		panel.add(voiceButton);
+		
+		JButton button_2 = new JButton("");
+		button_2.setIcon(new ImageIcon(privateMessage.class.getResource("/Icon/video.png")));
+		button_2.setBounds(169, 5, 29, 23);
+		panel.add(button_2);
+		
+		JSeparator separator_3 = new JSeparator();
+		separator_3.setOrientation(SwingConstants.VERTICAL);
+		separator_3.setBounds(208, 7, 1, 21);
+>>>>>>> fff70132f209a0120a1f3be14415cabb1922da30
 		panel.add(separator_3);
 		
 		JButton filebutton = new JButton("");
 		filebutton.setIcon(new ImageIcon(privateMessage.class.getResource("/Icon/file.png")));
+<<<<<<< HEAD
 		filebutton.setBounds(118, 5, 29, 23);
 		panel.add(filebutton);
 		
@@ -131,6 +189,10 @@ public class privateMessage extends JFrame {
 		button_1.setIcon(new ImageIcon(privateMessage.class.getResource("/Icon/video.png")));
 		button_1.setBounds(168, 5, 29, 23);
 		panel.add(button_1);
+=======
+		filebutton.setBounds(306, 5, 29, 23);
+		panel.add(filebutton);
+>>>>>>> fff70132f209a0120a1f3be14415cabb1922da30
                 filebutton.addActionListener(new ActionListener(){
                     public void actionPerformed(ActionEvent e) {
                         //System.out.println("hi sendfile");
