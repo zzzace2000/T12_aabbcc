@@ -58,6 +58,7 @@ public class mainFram extends JFrame {
 	private JScrollPane scrollPane_1;
 	private JPanel panel_2;
 	private JLabel lblNewLabel;
+	private JPanel thisChatroomOnline;
 	public JPanel allOnline;
 	private int forBuildSticker;
         HashMap<Integer, privateMessage> PM = new HashMap<Integer, privateMessage> ();
@@ -127,7 +128,7 @@ public class mainFram extends JFrame {
 		JLabel label_1 = new JLabel("當前聊天室在線");
 		scrollPane_1.setColumnHeaderView(label_1);
 		
-		JPanel thisChatroomOnline = new JPanel();
+		thisChatroomOnline = new JPanel();
 		thisChatroomOnline.setBackground(Color.WHITE);
 		scrollPane_1.setViewportView(thisChatroomOnline);
 		
@@ -139,15 +140,13 @@ public class mainFram extends JFrame {
 		JButton btnNewButton = new JButton("");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Vector<String> connection = conDialog.showDialog(mainFram.this, "連線");
-				theClient.connectToServer((String)connection.get(0), Integer.parseInt((String)connection.get(1)), (String)connection.get(2));
-				userNameLabel.setText((String)connection.get(2)); 
+				logoutFrame.showDialog(mainFram.this, "登出", theClient);
 			}
 
 
 		});
-		btnNewButton.setToolTipText("連線");
-		btnNewButton.setIcon(new ImageIcon(mainFram.class.getResource("/Icon/connection.png")));
+		btnNewButton.setToolTipText("登出");
+		btnNewButton.setIcon(new ImageIcon(mainFram.class.getResource("/Icon/logoutIcon.png")));
 		panel_5.add(btnNewButton);
 		
 		JButton btnNewButton_3 = new JButton("");
@@ -170,7 +169,14 @@ public class mainFram extends JFrame {
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
-				//refresh the user in the specific room;
+				chatroomPane tmp = (chatroomPane)(tabbedPane.getSelectedComponent());
+				thisChatroomOnline.removeAll();
+				Vector<String> tmpName = tmp.members;
+				for(int i = 0; i < tmpName.size(); ++i){
+					JLabel tmpLabel = new JLabel(tmpName.get(i));
+					thisChatroomOnline.add(tmpLabel);
+				}
+				thisChatroomOnline.validate();
 			}
 		});
 		tabbedPane.setBounds(0, 0, 458, 269);
@@ -249,15 +255,6 @@ public class mainFram extends JFrame {
 		});
 		panel_2.add(stickers);
 		
-		JButton shake = new JButton(new ImageIcon(mainFram.class.getResource("/Icon/vibrate.png")));
-		shake.setBounds(105, 9, 23, 23);
-		shake.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				shake();
-			}
-		});
-		panel_2.add(shake);
-		
 		userNameLabel = new JLabel("");
 		userNameLabel.setBounds(255, 9, 105, 17);
 		panel_2.add(userNameLabel);
@@ -265,6 +262,7 @@ public class mainFram extends JFrame {
 		JPanel panel_6 = new JPanel();
 		panel_6.setBackground(Color.WHITE);
 		panel_6.setBounds(370, 9, 76, 76);
+		panel_6.setLayout(new BorderLayout());
 		panel_2.add(panel_6);
 		
 		lblNewLabel = new JLabel("");
@@ -283,20 +281,32 @@ public class mainFram extends JFrame {
 					ImageIcon imageIcon = new ImageIcon(file.getAbsolutePath());
 					Image image = imageIcon.getImage();
 					int scaledH,scaledW;
-					if((imageIcon.getIconWidth()-76) > (imageIcon.getIconHeight()-76)){
-						scaledH = 76;
-						scaledW = imageIcon.getIconWidth()/(imageIcon.getIconHeight()/scaledH);
+					if(imageIcon.getIconHeight() > imageIcon.getIconWidth()){
+						if(imageIcon.getIconHeight() < 76){
+							scaledH = imageIcon.getIconHeight();
+							scaledW = imageIcon.getIconWidth();
+						}	
+						else{
+							scaledH = 76;
+							scaledW = imageIcon.getIconWidth()/(imageIcon.getIconHeight()/scaledH);
+						}
 					}
 					else{
-						scaledW = 76;
-						scaledH = imageIcon.getIconHeight()/(imageIcon.getIconWidth()/scaledW);
+						if(imageIcon.getIconWidth() < 76){
+							scaledW = imageIcon.getIconHeight();
+							scaledH = imageIcon.getIconWidth();
+						}
+						else{
+							scaledW = 76;
+							scaledH = imageIcon.getIconHeight()/(imageIcon.getIconWidth()/scaledW);
+						}
 					}
 					Image newimg = image.getScaledInstance(scaledW, scaledH,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
 					lblNewLabel.setIcon(imageIcon = new ImageIcon(newimg));
 				}
 			}
 		});
-		panel_6.add(lblNewLabel);
+		panel_6.add(lblNewLabel,BorderLayout.CENTER);
 		
 		textField_2.addKeyListener(new checktypeListener());
 		
@@ -353,27 +363,6 @@ public class mainFram extends JFrame {
 	public static void showAlertDialog(String alertMsg) {
 		// Write a pump up dialog that shows some alerts
 		System.out.println("Alert: "+alertMsg);
-	}
-	
-
-	
-	public void shake(){
-		try{
-			int originalX = mainFram.this.getLocationOnScreen().x;
-			int originalY = mainFram.this.getLocationOnScreen().y;
-			for(int i = 0; i < 10; ++i){
-				Thread.sleep(10);
-				mainFram.this.setLocation(originalX, originalY+5);
-				Thread.sleep(10);
-				mainFram.this.setLocation(originalX, originalY-5);
-				Thread.sleep(10);
-				mainFram.this.setLocation(originalX+5, originalY);
-				Thread.sleep(10);
-				mainFram.this.setLocation(originalX, originalY);
-			}
-		}catch(Exception err){
-			err.printStackTrace();
-		}
 	}
 	        /////helper functions/////
         public void newChR (int roomID, String rName, String mems) {
