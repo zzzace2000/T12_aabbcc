@@ -17,6 +17,7 @@ import javax.swing.JScrollPane;
 import javax.swing.ImageIcon;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.util.Collections;
 
 public class newChatroom extends JDialog {
 
@@ -34,7 +35,12 @@ public class newChatroom extends JDialog {
 	 * Create the dialog.
 	 */
 	public newChatroom(Vector<String> allOnline, JFrame parent, String title) {
-		super(parent, title, true);                
+//<<<<<<< HEAD
+//		super(parent, title, true);                
+//=======
+		super(parent, title, true);
+		setResizable(false);
+//>>>>>>> b0232f44beab8a60b82263dc330c8471369a5945
 		setAlwaysOnTop(true);
 		setTitle("create new chat room");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(newChatroom.class.getResource("/Icon/Chattmp.png")));
@@ -105,7 +111,7 @@ public class newChatroom extends JDialog {
 		contentPanel.add(lblNewLabel);
 	}
 	//////helper funtions/////
-	public Vector getValues(){
+	public Vector getValues(){                
 		return values;
 	}
 	

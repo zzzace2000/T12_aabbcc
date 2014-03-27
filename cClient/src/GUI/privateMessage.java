@@ -25,12 +25,15 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JTextPane;
+import javax.swing.text.StyledDocument;
 
 public class privateMessage extends JFrame {
 
         private cClient theClient;
-        private String talkTo;
+        private int talkTo;
 	private JPanel contentPane;
+        private JTextPane messagePane;
 	private JTextField textField;
 	private JButton sendButton;
         private final static 
@@ -39,11 +42,12 @@ public class privateMessage extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public privateMessage(cClient cc, String rec) {
+	public privateMessage(cClient cc, int rec) {
                 theClient = cc;
                 talkTo = rec;
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 481, 357);
+                setTitle(theClient.getPrivateName(talkTo));
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
@@ -73,7 +77,7 @@ public class privateMessage extends JFrame {
 		panel.add(button);
 		
 		JButton button_1 = new JButton("strickers");
-		button_1.setBounds(100, 5, 84, 23);
+		button_1.setBounds(10, 5, 84, 23);
 		panel.add(button_1);
 		
 		textField = new JTextField();
@@ -96,6 +100,7 @@ public class privateMessage extends JFrame {
                     public void actionPerformed(ActionEvent e) {
                         System.out.println(textField.getText());
                         //chatBoard.replaceSelection("hello!!");
+                        displaychats(theClient.getUserName(), textField.getText());
                         theClient.sendPMsg("/t -w "+ talkTo + " " + textField.getText());
                         
                     }
@@ -103,27 +108,27 @@ public class privateMessage extends JFrame {
 		
 		JSeparator separator_2 = new JSeparator();
 		separator_2.setOrientation(SwingConstants.VERTICAL);
-		separator_2.setBounds(194, 7, 1, 21);
+		separator_2.setBounds(104, 7, 1, 21);
 		panel.add(separator_2);
 		
 		JButton soundButton = new JButton("");
 		soundButton.setIcon(new ImageIcon(privateMessage.class.getResource("/Icon/soundicon.png")));
-		soundButton.setBounds(202, 5, 29, 23);
+		soundButton.setBounds(115, 5, 29, 23);
 		panel.add(soundButton);
 		
 		JButton voiceButton = new JButton("");
 		voiceButton.setIcon(new ImageIcon(privateMessage.class.getResource("/Icon/mic.png")));
-		voiceButton.setBounds(229, 5, 29, 23);
+		voiceButton.setBounds(142, 5, 29, 23);
 		panel.add(voiceButton);
 		
 		JButton button_2 = new JButton("");
 		button_2.setIcon(new ImageIcon(privateMessage.class.getResource("/Icon/video.png")));
-		button_2.setBounds(256, 5, 29, 23);
+		button_2.setBounds(169, 5, 29, 23);
 		panel.add(button_2);
 		
 		JSeparator separator_3 = new JSeparator();
 		separator_3.setOrientation(SwingConstants.VERTICAL);
-		separator_3.setBounds(295, 7, 1, 21);
+		separator_3.setBounds(208, 7, 1, 21);
 		panel.add(separator_3);
 		
 		JButton filebutton = new JButton("");
@@ -157,10 +162,24 @@ public class privateMessage extends JFrame {
 		JScrollPane scrollPane = new JScrollPane();
 		contentPane.add(scrollPane, BorderLayout.CENTER);
 		
-		JPanel messagePane = new JPanel();
-		messagePane.setBackground(Color.WHITE);
+		//JPanel messagePane = new JPanel();
+                messagePane = new JTextPane();
+                messagePane.setEditable(false);
+		//messagePane.setBackground(Color.WHITE);
 		messagePane.setLayout(new BoxLayout(messagePane, BoxLayout.Y_AXIS));
 		scrollPane.setViewportView(messagePane);
 	}
         
+        public void displaychats( String from, String msg){
+		//some more specific display stickers, text, etc
+            StyledDocument doc = messagePane.getStyledDocument();
+            //String from = theClient.getPrivateName(talkTo);
+            try {
+                doc.insertString(doc.getLength(),from,null);
+                doc.insertString(doc.getLength(), " : ", null);
+                doc.insertString(doc.getLength(), msg, null);
+                doc.insertString(doc.getLength(), "\n", null);
+            } catch(Exception e){}
+            
+	}
 }
