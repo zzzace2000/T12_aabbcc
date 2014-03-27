@@ -5,9 +5,12 @@ import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.Vector;
@@ -22,9 +25,10 @@ public class conn_thread implements Runnable {
 	private DataOutputStream output;
 	private String msg, username;
 	private int userID;
-
+       String DEFAULT_FILE_PATH = "./";
 	public conn_thread(cServer mainServer, int ID, Socket sock) {
-		userID = ID;
+                userID = ID;
+                username = null;
 		this.mainServer = mainServer;
 		this.sock = sock;
 		this.mainFrame = mainServer.serverFrame;
@@ -88,11 +92,20 @@ public class conn_thread implements Runnable {
 				}
 			}
 			else if (msg.startsWith("/t")) {
+System.out.println("in judge: "+ msg);
 				transPMsg(msg.substring(3));
 			}
+            else if (msg.startsWith("/p")){
+                transPIcon(msg.substring(3));
+            }
 			else if (msg.startsWith("/f")) {
 				if ((msg.substring(3)).startsWith("-s"))
 					transFile(msg.substring(6));
+                	    else if ((msg.substring(3)).startsWith("-r")) {
+                    		String fileName = msg.substring(6);
+                   		// File file = new File(DEFAULT_FILE_PATH+fileName);
+                    		mainServer.serverSendFile(userID, fileName);
+                	    }
 			}
 			else if (msg.startsWith("/nrm")) {
 				int space = (msg.substring(5)).indexOf(" ");
@@ -108,6 +121,14 @@ public class conn_thread implements Runnable {
 					mainServer.synNewRoom(((int) vs.get(1)), roomName, msg.substring(5));
 				}
 			}
+            else if (msg.startsWith("/npr")) {
+                int toID = Integer.parseInt(msg.substring(5));
+                mainServer.synNewWhisper(toID, userID);
+            }
+            else if (msg.startsWith("/!")) {
+                int toID = Integer.parseInt(msg.substring(3));
+                mainServer.whisShake(toID, userID);
+            }
 			else if (msg.startsWith("/v")) {
 				String[] tmp = msg.split(" ");
 				if (tmp.length > 0) {
@@ -131,6 +152,7 @@ public class conn_thread implements Runnable {
 			e.printStackTrace();
 		}
 
+
 	}
 
 	private void sendVideoRequest(int receiverID, String invitePersonIP) {
@@ -144,21 +166,19 @@ public class conn_thread implements Runnable {
 			// InputStreamReader(sock.getInputStream())).readLine();
 			// System.out.printf("receiving file: %s", fileName);
 			System.out.println("in transFile " + msg);
-			/*
-			 * String [] splitMsg = msg.split(" "); String rec = splitMsg[0];
-			 * String fileName = splitMsg[1];
-			 */
-			int space1 = msg.indexOf(" ");
-			String rec = msg.substring(0, space1);// space1 not included
-			String remain = msg.substring(space1 + 1);
-			int space2 = remain.indexOf(" ");
-			int fileLength = Integer.parseInt(remain.substring(0, space2));
-
+			 int space1 = msg.indexOf(" ");
+                int rec = Integer.parseInt(msg.substring(0, space1));//space1 not included
+                String remain = msg.substring(space1+1);
+                int space2 = remain.indexOf(" ");
+                int fileLength = Integer.parseInt(remain.substring(0, space2));
+                String remain2 = remain.substring(space2+1);
+                int space3 = remain2.indexOf(" ");
+                String fileName = remain2.substring(space3+1);
 			BufferedInputStream inputStream = new BufferedInputStream(sock.getInputStream());
 			// BufferedInputStream inputStream = new BufferedInputStream(input);
 			BufferedOutputStream outputStream = new BufferedOutputStream(
 					new FileOutputStream(
-							"C:\\Users\\Kimberly Hsiao\\Documents\\NetBeansProjects\\fileClient\\build\\classes\\Icon\\ironman_2.jpg"));
+							DEFAULT_FILE_PATH +fileName));
 
 			int readin;
 			/*
@@ -180,6 +200,8 @@ public class conn_thread implements Runnable {
 			// sock.close();
 
 			System.out.println("recieving completed!");
+	             mainServer.whisAskFile(rec, userID, fileName);
+                     mainServer.whisFileSuc(rec, userID, fileName);
 
 		} catch (IOException e) {
 			System.out.println(e.toString());
@@ -197,10 +219,10 @@ public class conn_thread implements Runnable {
 		String tx = remain1.substring(space2 + 1);
 		if (mode.equals("-b")) {
 			System.out.println("in transPMsg: " + msg.substring(3));
-			mainServer.broadcast(Integer.parseInt(ID), username, tx);
+			mainServer.broadText(Integer.parseInt(ID), userID, username,tx);
 		}
 		else if (mode.equals("-w")) {
-			mainServer.whisper(Integer.parseInt(ID), userID, tx);
+			mainServer.whisText(Integer.parseInt(ID), userID, tx);
 		}
 
 		// original version
@@ -212,6 +234,22 @@ public class conn_thread implements Runnable {
 		 * e.printStackTrace(); }
 		 */
 	}
+         public void transPIcon(String msg) {
+              int space1 = msg.indexOf(" ");
+              String mode = msg.substring(0,space1);
+              String remain1 = msg.substring(space1+1);
+              int space2 = remain1.indexOf(" ");
+              String ID = remain1.substring(0,space2);
+              String iconID = remain1.substring(space2+1);
+              if (mode.equals("-b")) {
+                   //System.out.println("in transPMsg: "+ msg.substring(3));
+                   mainServer.broadIcon(Integer.parseInt(ID), userID, username,iconID);
+              }
+              else if (mode.equals("-w")) {
+                  mainServer.whisIcon(Integer.parseInt(ID), userID, iconID);
+              }
+             
+         }
 
 	// ///sending/////
 	public void sendPMsg(String msg) {
@@ -222,8 +260,44 @@ public class conn_thread implements Runnable {
 			e.printStackTrace();
 		}
 	}
+        
+        public void sendFile (String fileName) {
+             try {
+                //File file = new File(fileName);
+                //would this message be separated with the file itself??
+                File file = new File(DEFAULT_FILE_PATH + fileName);
+                output.writeUTF("/f -r "+file.length()+ " " +fileName);
+                PrintStream printStream = new PrintStream(sock.getOutputStream());
+                //printStream.println("/f -s "+ rec + " "+fileName);
+            
+                System.out.print("transmitting...");
+            
+                BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(file));
+            
+                int readin;
+                while ((readin = inputStream.read()) != -1) {
+                   // System.out.print("hi");
+                    //output.write(readin);
+                    printStream.write(readin);
+                    Thread.yield();
+                }
+                //output.flush();
+                
+                printStream.flush();
+                //printStream.close();
+                //i have to change this into something else inorder not to close the socket but can pass end of file...
+                inputStream.close();
+                
+                System.out.println("transmitting completed!");
+            }
+            catch(Exception e) {
+                System.out.println("sendFile failed");
+                System.out.println(e.toString());
+                e.printStackTrace();
+            }
+        }
 
-	// //helper function////
+        ////helper function//// 
 	public String getUserName() {
 		if (username != null) {
 			return username;

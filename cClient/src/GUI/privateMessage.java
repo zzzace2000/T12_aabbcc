@@ -28,7 +28,8 @@ import javax.swing.ImageIcon;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
-
+import javax.swing.JTextPane;
+import javax.swing.text.StyledDocument;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
@@ -42,12 +43,13 @@ public class privateMessage extends JFrame {
         private cClient theClient;
         private int talkTo;
 	private JPanel contentPane;
+        private JTextPane messagePane;
 	private JTextField textField;
 	private JButton sendButton;
 	private JPanel panel ;
 	private videoFrame videochat;
         private final static 
-        String DEFAULT_FILE_PATH = "C:\\Users\\Kimberly Hsiao\\Documents\\NetBeansProjects\\fileClient\\build\\classes\\Icon";
+        String DEFAULT_FILE_PATH = "./";
         private JButton videoAudioButton;
         
 	/**
@@ -58,6 +60,7 @@ public class privateMessage extends JFrame {
                 talkTo = rec;
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 481, 357);
+                setTitle(theClient.getPrivateName(talkTo));
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
@@ -72,11 +75,6 @@ public class privateMessage extends JFrame {
 		separator.setBounds(211, 5, 2, 0);
 		separator.setOrientation(SwingConstants.VERTICAL);
 		panel.add(separator);
-		
-		JSeparator separator_1 = new JSeparator();
-		separator_1.setOrientation(SwingConstants.VERTICAL);
-		separator_1.setBounds(89, 7, 1, 21);
-		panel.add(separator_1);
 		
 		textField = new JTextField();
 		textField.addKeyListener(new KeyAdapter() {
@@ -94,14 +92,20 @@ public class privateMessage extends JFrame {
 		sendButton.setIcon(new ImageIcon(privateMessage.class.getResource("/Icon/tosend.png")));
 		sendButton.setBounds(397, 32, 49, 49);
 		panel.add(sendButton);
-                sendButton.addActionListener(new ActionListener(){
+                
+                /*sendButton.addActionListener(new ActionListener(){
                     public void actionPerformed(ActionEvent e) {
                         System.out.println(textField.getText());
                         //chatBoard.replaceSelection("hello!!");
+                        displaychats(theClient.getUserName(), textField.getText());
                         theClient.sendPMsg("/t -w "+ talkTo + " " + textField.getText());
                         
                     }
-                });
+                });*/
+                
+                sendMessage send = new sendMessage();
+                textField.addActionListener(send);
+                sendButton.addActionListener(send);
 		
 		JSeparator separator_2 = new JSeparator();
 		separator_2.setOrientation(SwingConstants.VERTICAL);
@@ -121,32 +125,29 @@ public class privateMessage extends JFrame {
 		
 		JButton filebutton = new JButton("");
 		filebutton.setIcon(new ImageIcon(privateMessage.class.getResource("/Icon/file.png")));
-		filebutton.setBounds(118, 5, 29, 23);
+		filebutton.setBounds(115, 5, 29, 23);
 		panel.add(filebutton);
 		
 		JButton stickerButton = new JButton("");
-		stickerButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
+		stickerButton.setIcon(new ImageIcon(privateMessage.class.getResource("/Icon/emotionButtonIcon.png")));
+		stickerButton.setBounds(10, 5, 87, 23);
+                stickerButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
 				JPopupMenu tmpMenu = new JPopupMenu();
-				for(int i = 1; i < 7; ++i){
+				for(int i = 1; i < 7; ++i) {
 					JMenuItem tmp = new JMenuItem(new ImageIcon(mainFram.class.getResource("/Icon/emotion" + i + "-key.png")));
-					tmp.addActionListener(new ActionListener(){
-						public void actionPerformed(ActionEvent e){
-							//send stickers by cClient
-						}
-					});
+                                        tmp.addActionListener(new privateMessage.stickerButton(i));
 					tmpMenu.add(tmp);
 				}
 				tmpMenu.show(panel,10,9);
 			}
+			
 		});
-		stickerButton.setIcon(new ImageIcon(privateMessage.class.getResource("/Icon/emotionButtonIcon.png")));
-		stickerButton.setBounds(10, 5, 87, 23);
 		panel.add(stickerButton);
 		
 		JSeparator separator1 = new JSeparator();
 		separator1.setOrientation(SwingConstants.VERTICAL);
-		separator1.setBounds(157, 6, 1, 21);
+		separator1.setBounds(154, 7, 1, 21);
 		panel.add(separator1);
 		
 		JButton videoButton = new JButton("");
@@ -159,7 +160,7 @@ public class privateMessage extends JFrame {
 		
 		JSeparator separator2 = new JSeparator();
 		separator2.setOrientation(SwingConstants.VERTICAL);
-		separator2.setBounds(208, 6, 1, 21);
+		separator2.setBounds(208, 7, 1, 21);
 		panel.add(separator2);
 		
 		JButton btnNewButton = new JButton("");
@@ -181,6 +182,7 @@ public class privateMessage extends JFrame {
 				}catch(Exception err){
 					err.printStackTrace();
 				}
+                                theClient.sendPMsg("/! "+talkTo);
 			}
 		});
 		btnNewButton.setIcon(new ImageIcon(privateMessage.class.getResource("/Icon/vibrate.png")));
@@ -213,11 +215,102 @@ public class privateMessage extends JFrame {
 		JScrollPane scrollPane = new JScrollPane();
 		contentPane.add(scrollPane, BorderLayout.CENTER);
 		
-		JPanel messagePane = new JPanel();
-		messagePane.setBackground(Color.WHITE);
+		//JPanel messagePane = new JPanel();
+                messagePane = new JTextPane();
+                messagePane.setEditable(false);
+		//messagePane.setBackground(Color.WHITE);
 		messagePane.setLayout(new BoxLayout(messagePane, BoxLayout.Y_AXIS));
 		scrollPane.setViewportView(messagePane);
 	}
+        
+        public void displaychats(String type, String from, String msg){
+		  StyledDocument doc = messagePane.getStyledDocument();
+            try{
+                doc.insertString(doc.getLength(),from,null);
+                doc.insertString(doc.getLength(), " : ", null);
+                if (type.equals("t"))
+                    doc.insertString(doc.getLength(), msg, null);
+                else if (type.equals("p")) {
+                    messagePane.setCaretPosition(doc.getLength());
+                    messagePane.insertIcon(new ImageIcon(mainFram.class.getResource("/Icon/emotion" + Integer.parseInt(msg)+ ".png")));
+                    messagePane.validate();
+                }
+                    
+                doc.insertString(doc.getLength(), "\n", null);
+                System.out.println("after " + doc.getLength());
+            }catch(Exception e){}
+            
+	}
+        
+        public void askFile(String from, final String fileName) {
+            //ask client whether to receive file or not
+            StyledDocument doc = messagePane.getStyledDocument();
+            try {
+                doc.insertString(doc.getLength(), from, null);
+                doc.insertString(doc.getLength(), " : ", null);
+                messagePane.setCaretPosition(doc.getLength());
+                JButton recFile = new JButton("download"+ fileName);
+                recFile.addActionListener(new ActionListener() { 
+                    public void actionPerformed(ActionEvent e) {
+                        theClient.sendPMsg("/f -r "+fileName);
+                    }
+                });
+                messagePane.insertComponent(recFile);
+                doc.insertString(doc.getLength(), "\n", null);
+                messagePane.validate();
+            }catch(Exception e) {}
+        }
+        
+        public void shake() {
+            try{
+			int originalX = privateMessage.this.getLocationOnScreen().x;
+			int originalY = privateMessage.this.getLocationOnScreen().y;
+			for(int i = 0; i < 10; ++i){
+				Thread.sleep(10);
+				privateMessage.this.setLocation(originalX, originalY+5);
+				Thread.sleep(10);
+				privateMessage.this.setLocation(originalX, originalY-5);
+				Thread.sleep(10);
+				privateMessage.this.setLocation(originalX+5, originalY);
+				Thread.sleep(10);
+				privateMessage.this.setLocation(originalX, originalY);
+			}
+		}catch(Exception err){
+			err.printStackTrace();
+		}
+        }
+        class sendMessage implements ActionListener{
+		public void actionPerformed(ActionEvent e){
+			if(textField.getText().length() == 0)
+                            return;
+			 displaychats("t", theClient.getUserName(), textField.getText());
+                         theClient.sendPMsg("/t -w "+ talkTo + " " + textField.getText());
+                         textField.setText("");
+		}
+	}
+        
+        class checktypeListener extends KeyAdapter{
+		public void keyReleased(KeyEvent e){
+			if(textField.getText().length() != 0)
+				sendButton.setEnabled(true);
+			else
+				sendButton.setEnabled(false);
+		}
+	}
+        
+        class stickerButton implements ActionListener{
+            int i;
+            stickerButton(int tmp){
+                i = tmp;
+            }
+            public void actionPerformed(ActionEvent e){
+		
+                displaychats("p", theClient.getUserName(), Integer.toString(i));
+                        
+     
+		theClient.sendPMsg("/p -w " + talkTo + " "+ i);				
+        }
+        }
 	public JButton getVideoAudioButton() {
 		return videoAudioButton;
 	}

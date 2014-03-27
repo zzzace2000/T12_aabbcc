@@ -31,6 +31,7 @@ public class newChatroom extends JDialog {
         private final JPanel contentPanel = new JPanel();
 	private JTextField textField;
 	private JTable table;
+        private JPanel frdPane;
 	private Vector values = new Vector(); //first element is chatroom name, second element is friend list
         private Vector<String> rmFrd = new Vector<String>();
 	private JLabel lblNewLabel;
