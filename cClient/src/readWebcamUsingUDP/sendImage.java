@@ -22,6 +22,7 @@ public class sendImage implements Runnable{
 	OutputStream oStream;
 	String IP_TO_STREAM_TO;
 	int PORT_TO_STREAM_TO = 19998;
+	boolean sendIndicator = true;
 	
 	public sendImage(MainRecorder mn) {
 
@@ -41,7 +42,7 @@ public class sendImage implements Runnable{
 		
 		try {
 			while(!Thread.currentThread().isInterrupted()) {
-				if (!theMain.imageBuffer.isEmpty()) {
+				if (!theMain.imageBuffer.isEmpty() && sendIndicator) {
 					System.out.println("Write something");
 					BufferedImage theImage = theMain.imageBuffer.remove(0);
 					//theMain.imageBuffer.clear();
@@ -85,4 +86,12 @@ public class sendImage implements Runnable{
 
 	public void closeTheThread() {
 	}
+	
+	public void suspendSendingImage() {
+		sendIndicator = false;
+	}
+	public void resumeSendingImage() {
+		sendIndicator = true;
+	}
+	
 }

@@ -157,7 +157,7 @@ public class ServerFrame extends JFrame {
 	private void broadCast() {
 		String broadCastMsg = textPane.getText();
 		if (!broadCastMsg.isEmpty()) {
-			theServer.broadCast(broadCastMsg);
+			theServer.broadcast(0, "server", broadCastMsg);
 			textPane.setText("");
 			log(broadCastMsg);
 		}

@@ -37,6 +37,7 @@ import org.opencv.highgui.VideoCapture;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
 
+import soundRecorderByUDP.SoundRecorderMain;
 import webCamReceiverUDP.receiver;
 import GUI.videoFrame;
 
@@ -131,16 +132,20 @@ public class MainRecorder {
 
 	LinkedList<BufferedImage> imageBuffer = new LinkedList<BufferedImage>();
 	boolean imageIsNotSent = false;
-	int ViewMode = 1; // 1 from webcam. 2 from desktop
+	public int ViewMode = 1; // 1 from webcam. 2 from desktop
 	
 	receiver theReceiver;
 	videoFrame video;
-	sendImage child;
+	public sendImage child;
 	
 	boolean closeThreadIndicator = false;
 	
+	// sound
+	public SoundRecorderMain soundRecorder;
+	
 	Thread theReceiverThread;
 	Thread theThread;
+	Thread theSoundRecorderThread;
 
 	public static void main(String arg[]) throws InterruptedException {
 
@@ -152,6 +157,12 @@ public class MainRecorder {
 
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 		// or ... System.loadLibrary("opencv_java244");
+		
+		// open sound
+		soundRecorder = new SoundRecorderMain();
+		theSoundRecorderThread = new Thread(soundRecorder);
+		theSoundRecorderThread.start();
+		
 		
 		// make the JFrame
 		video = new videoFrame(this);
@@ -175,7 +186,7 @@ public class MainRecorder {
 					.getScreenSize());
 
 			if (webCam.isOpened()) {
-				Thread.sleep(4000);
+				Thread.sleep(1000);
 
 				child = new sendImage(this);
 				theThread = new Thread(child);
@@ -243,8 +254,11 @@ public class MainRecorder {
 	} // end main
 
 	public void closeTheThread() {
+		System.out.println("Interrupt");
 		theReceiverThread.interrupt();
 		theThread.interrupt();
+		System.out.println("sound receiver interrupt");
+		soundRecorder.closeTheThread();
 		closeThreadIndicator = true;
 	}
 

@@ -11,6 +11,7 @@ import java.util.Vector;
 import GUI.ServerFrame;
 
 import com.sun.org.apache.bcel.internal.generic.NEW;
+
 import java.util.HashMap;
 
 public class cServer {
@@ -187,7 +188,7 @@ public class cServer {
         
         /////functions for transmitting/////
         
-public void broadcast(int roomID, String from, String tx){
+        public void broadcast(int roomID, String from, String tx){
             for (Integer key: conn_client.keySet()) {
                  for (Integer i:chrmList.get(roomID)) {
                     if (i == key) {

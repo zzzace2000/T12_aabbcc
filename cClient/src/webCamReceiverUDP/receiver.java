@@ -57,9 +57,9 @@ public class receiver implements Runnable {
 
 		try {
 			ss = new DatagramSocket(PORT_TO_STREAM_TO);
-
+			ss.setSoTimeout(5000);
 			System.out.println("Assign the Socket");
-
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		} 
