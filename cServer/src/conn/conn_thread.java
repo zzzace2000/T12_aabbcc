@@ -145,6 +145,10 @@ System.out.println("in judge: "+ msg);
 							String FromIPAddress = tmp[4];
 							mainServer.replyVideoRequest(userID, talkToID, true, FromIPAddress);
 						}
+						else if (tmp[2].equals("n")) {
+							int talkToID = Integer.parseInt(tmp[3]);
+							mainServer.replyVideoRequest(userID, talkToID, false, "");
+						}
 					}
 				}
 			}

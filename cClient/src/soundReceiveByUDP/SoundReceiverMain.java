@@ -47,6 +47,7 @@ public class SoundReceiverMain extends Thread {
 			System.out.println("Sound receiver continues");
 			b = receiveThruUDP();
 			if (b != null) {
+				System.out.println("Really have sound");
 				toSpeaker(b);
 			}
 		}
