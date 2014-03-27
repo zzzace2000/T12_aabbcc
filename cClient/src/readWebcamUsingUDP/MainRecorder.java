@@ -149,10 +149,10 @@ public class MainRecorder {
 
 	public static void main(String arg[]) throws InterruptedException {
 
-		new MainRecorder();
+		new MainRecorder("localhost");
 	}
 
-	public MainRecorder() {
+	public MainRecorder(String ToIPAddress) {
 		// Load the native library.
 
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
@@ -188,7 +188,7 @@ public class MainRecorder {
 			if (webCam.isOpened()) {
 				Thread.sleep(1000);
 
-				child = new sendImage(this);
+				child = new sendImage(this, ToIPAddress);
 				theThread = new Thread(child);
 				theThread.start();
 

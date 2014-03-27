@@ -32,6 +32,11 @@ import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
+import readWebcamUsingUDP.MainRecorder;
+
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
 public class privateMessage extends JFrame {
 
         private cClient theClient;
@@ -43,6 +48,7 @@ public class privateMessage extends JFrame {
 	private videoFrame videochat;
         private final static 
         String DEFAULT_FILE_PATH = "C:\\Users\\Kimberly Hsiao\\Documents\\NetBeansProjects\\fileClient\\build\\classes\\Icon";
+        private JButton videoAudioButton;
         
 	/**
 	 * Create the frame.
@@ -102,10 +108,16 @@ public class privateMessage extends JFrame {
 		separator_2.setBounds(104, 7, 1, 21);
 		panel.add(separator_2);
 		
-		JButton button_2 = new JButton("");
-		button_2.setIcon(new ImageIcon(privateMessage.class.getResource("/Icon/video.png")));
-		button_2.setBounds(169, 5, 29, 23);
-		panel.add(button_2);
+		videoAudioButton = new JButton("");
+		videoAudioButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				theClient.sendVideoRequest(talkTo);
+			}
+		});
+		videoAudioButton.setIcon(new ImageIcon(privateMessage.class.getResource("/Icon/video.png")));
+		videoAudioButton.setBounds(169, 5, 29, 23);
+		panel.add(videoAudioButton);
 		
 		JButton filebutton = new JButton("");
 		filebutton.setIcon(new ImageIcon(privateMessage.class.getResource("/Icon/file.png")));
@@ -143,9 +155,7 @@ public class privateMessage extends JFrame {
 				//open videoFrame;
 			}
 		});
-		videoButton.setIcon(new ImageIcon(privateMessage.class.getResource("/Icon/video.png")));
-		videoButton.setBounds(168, 5, 29, 23);
-		panel.add(videoButton);
+		
 		
 		JSeparator separator2 = new JSeparator();
 		separator2.setOrientation(SwingConstants.VERTICAL);
@@ -207,5 +217,8 @@ public class privateMessage extends JFrame {
 		messagePane.setBackground(Color.WHITE);
 		messagePane.setLayout(new BoxLayout(messagePane, BoxLayout.Y_AXIS));
 		scrollPane.setViewportView(messagePane);
+	}
+	public JButton getVideoAudioButton() {
+		return videoAudioButton;
 	}
 }

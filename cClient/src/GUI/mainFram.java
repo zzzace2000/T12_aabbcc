@@ -42,6 +42,7 @@ import java.awt.event.MouseAdapter;
 import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;
+
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 
@@ -378,6 +379,12 @@ public class mainFram extends JFrame {
             tabbedPane.setTabComponentAt(tabbedPane.indexOfComponent(newChatroomPane), tmp);
             ChR.put(roomID, newChatroomPane);
         }
+        
+        public HashMap<Integer, privateMessage> getHashMapPM() {
+        	return PM;
+        }
+        
+        
 	class checktypeListener extends KeyAdapter{
 		public void keyReleased(KeyEvent e){
 			if(textField_2.getText().length() != 0)

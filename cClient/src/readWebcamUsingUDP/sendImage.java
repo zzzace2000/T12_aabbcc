@@ -24,13 +24,14 @@ public class sendImage implements Runnable{
 	int PORT_TO_STREAM_TO = 19998;
 	boolean sendIndicator = true;
 	
-	public sendImage(MainRecorder mn) {
+	public sendImage(MainRecorder mn, String ToIPAddress) {
 
 		try {
 			
 			theSocket = new DatagramSocket();
 			theMain = mn;
-			IP_TO_STREAM_TO = getLocalAddress();
+			//IP_TO_STREAM_TO = getLocalAddress();
+			IP_TO_STREAM_TO = ToIPAddress;
 			
 		} catch (SocketException e) {
 			e.printStackTrace();
