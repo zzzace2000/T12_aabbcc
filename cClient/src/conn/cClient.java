@@ -375,7 +375,7 @@ public class cClient implements Runnable {
 
 	public void replyVideoRequest(int talkToID, boolean accept, String ToIPAddress) {
 		if (accept) {
-			sendPMsg("/v -r y "+talkToID);
+			sendPMsg("/v -r y "+talkToID+" "+ToIPAddress);
 			startVideoTalk(ToIPAddress);
 		}
 		else {

@@ -121,7 +121,8 @@ public class conn_thread implements Runnable {
 					else if (tmp[1].equals("-r")) {
 						if (tmp[2].equals("y")) {
 							int talkToID = Integer.parseInt(tmp[3]);
-							mainServer.replyVideoRequest(userID, talkToID, true);
+							String FromIPAddress = tmp[4];
+							mainServer.replyVideoRequest(userID, talkToID, true, FromIPAddress);
 						}
 					}
 				}

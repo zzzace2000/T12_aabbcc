@@ -199,13 +199,13 @@ public class cServer {
 		}
 	}
 
-	public void replyVideoRequest(int fromID, int receiverID, boolean answer) {
+	public void replyVideoRequest(int fromID, int receiverID, boolean answer, String IPAddress) {
 		if (answer) {
 			// yes
 			for (Integer k: conn_client.keySet()) {
 				if (receiverID == k) {
-					(conn_client.get(k)).sendPMsg("/v -a y " + fromID);
-					serverFrame.log("send to userID "+k+": /v -a y " + fromID);
+					(conn_client.get(k)).sendPMsg("/v -a y " + fromID + " " + IPAddress);
+					serverFrame.log("send to userID "+k+": /v -a y " + fromID + " " + IPAddress);
 				}
 			}
 		}
