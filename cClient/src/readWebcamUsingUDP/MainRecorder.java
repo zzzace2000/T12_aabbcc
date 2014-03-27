@@ -218,7 +218,7 @@ public class MainRecorder implements Runnable {
 				// ==== Webcam mode ====//
 				if (ViewMode == 1) {
 					webCam.read(webcam_image);
-					System.out.println("Catch an image!");
+					//System.out.println("Catch an image!");
 
 					if (!webcam_image.empty()) {
 

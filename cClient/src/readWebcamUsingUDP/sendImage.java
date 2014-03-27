@@ -44,7 +44,7 @@ public class sendImage implements Runnable{
 		try {
 			while(!Thread.currentThread().isInterrupted()) {
 				if (!theMain.imageBuffer.isEmpty() && sendIndicator) {
-					System.out.println("Write something");
+					//System.out.println("Write something");
 					BufferedImage theImage = theMain.imageBuffer.remove(0);
 					//theMain.imageBuffer.clear();
 					
@@ -52,9 +52,9 @@ public class sendImage implements Runnable{
 					ImageIO.write(theImage, "jpg", baos);
 					baos.close();
 
-					System.out.println("Write byte size = " + baos.size());
+					//System.out.println("Write byte size = " + baos.size());
 
-					System.out.println("Write byte stream");
+					//System.out.println("Write byte stream");
 					sendThruUDP(baos.toByteArray());
 					//theMain.imageIsNotSent = false;
 				}
@@ -69,7 +69,7 @@ public class sendImage implements Runnable{
 	}
 
 	private void sendThruUDP(byte[] packet) throws UnknownHostException, IOException {
-		System.out.println("packet size = "+packet.length);
+		//System.out.println("packet size = "+packet.length);
 		theSocket.send( new DatagramPacket( packet , packet.length , InetAddress.getByName( IP_TO_STREAM_TO ) , PORT_TO_STREAM_TO ) ) ; 
 	}
 	

@@ -85,7 +85,7 @@ public class receiver implements Runnable {
 
 				if (image != null) {
 					theVideoFrame.showReceivedImage(image);
-					System.out.println("image is gotten!");
+					//System.out.println("image is gotten!");
 				} else {
 					System.out.println("image is empty in receiver!");
 				}
