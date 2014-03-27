@@ -29,7 +29,7 @@ public class videoDialog extends JDialog {
 		super(parent, title, true);
 		theClient = cc;
 		talkToID = ttID;
-		fromIPAddress = fromIPAddress;
+		fromIPAddress = fIPA;
 		
 		setResizable(false);
 		setBounds(100, 100, 173, 151);

@@ -302,5 +302,6 @@ public class videoFrame extends JFrame {
 	public void showReceivedImage(BufferedImage image) {
 		netPane.assignImage(image);
 		netPane.repaint();
+		netPane.revalidate();
 	}
 }
