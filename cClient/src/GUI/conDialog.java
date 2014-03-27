@@ -25,6 +25,7 @@ public class conDialog extends JDialog {
 	private JTextField textField_1;
 	private JTextField textField_2;
 	private Vector<String> values = new Vector<String>();
+	private JLabel errorMessageLabel ;
 	
 	private String IP_ADDRESS;
 	private static int PORT = 5001;
@@ -75,6 +76,21 @@ public class conDialog extends JDialog {
 		JButton btnNewButton = new JButton("Connect!!!");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				if(textField.getText().length() == 0){
+					errorMessageLabel.setIcon(new ImageIcon(conDialog.class.getResource("/Icon/warning.png")));
+					errorMessageLabel.setText("IP can not be null");
+					return;
+				}
+				else if(textField_1.getText().length() == 0){
+					errorMessageLabel.setIcon(new ImageIcon(conDialog.class.getResource("/Icon/warning.png")));
+					errorMessageLabel.setText("Port can not be null");
+					return;
+				}
+				else if(textField_2.getText().length() == 0){
+					errorMessageLabel.setIcon(new ImageIcon(conDialog.class.getResource("/Icon/warning.png")));
+					errorMessageLabel.setText("name can not be null");
+					return;
+				}
 				values.add(textField.getText());
 				values.add(textField_1.getText());
 				values.add(textField_2.getText());
@@ -98,6 +114,10 @@ public class conDialog extends JDialog {
 		JLabel lblIp = new JLabel("IP");
 		lblIp.setBounds(10, 10, 46, 15);
 		contentPanel.add(lblIp);
+		
+		errorMessageLabel = new JLabel("");
+		errorMessageLabel.setBounds(10, 174, 259, 15);
+		contentPanel.add(errorMessageLabel);
 	}
 	
 	public Vector<String> getValues(){
@@ -116,6 +136,4 @@ public class conDialog extends JDialog {
 		return theAddresString;
 		
 	}
-	
-	
 }
