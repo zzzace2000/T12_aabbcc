@@ -9,6 +9,10 @@ import java.util.ArrayList;
 import java.util.Vector;
 
 import com.sun.org.apache.bcel.internal.generic.NEW;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.PrintStream;
 import java.util.HashMap;
 
 public class cServer {
@@ -93,12 +97,19 @@ public class cServer {
                return false;
             }
             else {
-		for (Integer n: chrmList.get(0))
+		/*for (Integer n: chrmList.get(0))
 		{
 			if ( n == ID) {
                             return true;
 			}
-		}
+		}*/
+                for (Integer key: conn_client.keySet()) {
+                        if (((conn_client.get(key)).getUserName()) != null) {
+                            if (((conn_client.get(key)).getUserName()).equals(name)) {
+                                return true;
+                            }
+                        }
+                }
 		(chrmList.get(0)).add(ID);
 		return false;
             }
@@ -167,11 +178,13 @@ public class cServer {
         public String getAllOnl(int self) {
             String allO = new String("");
             for (Integer key: conn_client.keySet()) {
-                if (self != key){
-                     allO+=" ";
-                    allO+=key;
-                    allO+="_";
-                    allO+=((conn_client.get(key)).getUserName());
+                if ((conn_client.get(key)).getUserName() != null) {
+                    if (self != key){
+                        allO+=" ";
+                        allO+=key;
+                        allO+="_";
+                        allO+=((conn_client.get(key)).getUserName());
+                    }
                 }
             }
             return allO;
@@ -226,15 +239,33 @@ public class cServer {
                 i.sendPMsg("/t " + from + " " + tx);
         }*/
         
-        public void broadcast(int roomID, String from, String tx){
-            for (Integer key: conn_client.keySet()) {
-                 for (Integer i:chrmList.get(roomID)) {
-                    if (i == key) {
-                        (conn_client.get(key)).sendPMsg("/t -b " + roomID + " " + from + " " + tx);
+        public void broadText(int roomID, int fromID, String from, String tx){
+            for (Integer i : chrmList.get(roomID)) {
+                if (i!=fromID) {
+                    for (Integer key: conn_client.keySet()) {
+                        if (i==key) {
+                            (conn_client.get(key)).sendPMsg("/t -b " + roomID + " " + from + " " + tx);
+                            break;
+                        }
                     }
-                 }
+                }
             }
         }
+        
+        public void broadIcon(int roomID, int fromID, String from, String iconID) {
+             for (Integer i : chrmList.get(roomID)) {
+                 if (i!=fromID) {
+                    for (Integer key: conn_client.keySet()) {
+                        if (i==key) {
+                            (conn_client.get(key)).sendPMsg("/p -b " + roomID + " " + from + " " + iconID);
+                            break;
+                        }
+                    }
+                }
+             }
+        }
+        
+       
         
        /* public void whisper(int rec, String from, String tx){
             for (conn_thread i : conn_client) {
@@ -250,12 +281,58 @@ public class cServer {
             }
         }*/
         
-        public void whisper (int rec, int from, String tx) {
+        public void whisText (int rec, int from, String tx) {
             for (Integer key: conn_client.keySet()) {
                 if (rec == key) {
                     (conn_client.get(key)).sendPMsg("/t -w " + from + " " + tx);
+                    break;
                 }
             }
+        }
+        
+        public void whisIcon (int rec, int from , String iconID) {
+             for (Integer key: conn_client.keySet()) {
+                if (rec == key) {
+                    (conn_client.get(key)).sendPMsg("/p -w " + from + " " + iconID);
+                    break;
+                }
+            }
+        }
+        
+        public void whisAskFile(int rec, int from, String fileName) {
+             for (Integer key: conn_client.keySet()) {
+                if (rec == key) {
+                    (conn_client.get(key)).sendPMsg("/f -ox " + from + " " + fileName);
+                    break;
+                }
+            }
+        }
+        
+        public void whisFileSuc (int rec, int from, String fileName) {
+            for (Integer key: conn_client.keySet()) {
+                if (from == key) {
+                    (conn_client.get(key)).sendPMsg("/f -s " + rec + " " +fileName);
+                    break;
+                }
+            }
+        }
+        
+        public void whisShake (int rec, int from) {
+            for (Integer key: conn_client.keySet()) {
+                if (key == rec) {
+                    (conn_client.get(key)).sendPMsg("/! "+from);
+                    break;
+                }
+            }
+        }
+        
+         public void serverSendFile (int rec, String fileName) {
+                for (Integer key: conn_client.keySet()) {
+                    if (key == rec) {
+                        (conn_client.get(key)).sendFile(fileName);
+                        break;
+                    }
+                }
         }
 	
 	

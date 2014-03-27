@@ -14,8 +14,10 @@ import GUI.mainFram;
 import GUI.newChatroom;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -40,13 +42,15 @@ public class cClient implements Runnable{
         //String fileName;
         //File file;
         
+        String DEFAULT_FILE_PATH = "C:\\Users\\Kimberly Hsiao\\Documents\\GitHub\\T12_aabbcc\\cClient\\src\\clientFile\\";
+        
 	public cClient() {
 		frame = new mainFram(cClient.this);
 
 		//conDialog dialog = new conDialog(frame, "haha");
 		//dialog.setVisible(true);
 		
-		frame.setVisible(true);
+		//frame.setVisible(true);
 		/*EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -119,6 +123,7 @@ public class cClient implements Runnable{
                     }
                     //if login Succeed
                     else if (msg.startsWith("/s")) {
+                        frame.setVisible(true);
                         int space1 = (msg.substring(3)).indexOf(" ");
                         //if there is other people already online
                         if (space1 != -1) {
@@ -131,23 +136,35 @@ public class cClient implements Runnable{
                     else if (msg.startsWith("/t")){
                         recPMsg(msg.substring(3));
                     }
+                    else if (msg.startsWith("/p")) {
+                        recPIcon(msg.substring(3));
+                    }
                     else if (msg.startsWith("/o")) {
                     	System.out.println("in /o");
                         newOnline(msg.substring(3));
                     }
                     else if (msg.startsWith("/f")) {
                         String remain = msg.substring(3);
-                        //success??
-                        if (remain.startsWith("-s")){
-                            
+                        if (remain.startsWith("-s")) {
+                           int space1 = remain.indexOf(" ");
+                            String remain2 = remain.substring(space1+1);
+                            int space2 = remain2.indexOf(" ");
+                            int ID = Integer.parseInt(remain2.substring(0, space2));
+                            String fileName = remain2.substring(space2+1);
+                            frame.askPriFile(ID, fileName);
                         }
                         // ask client whether to receive file or not
                         else if (remain.startsWith("-ox")){
-                            
+                            int space1 = remain.indexOf(" ");
+                            String remain2 = remain.substring(space1+1);
+                            int space2 = remain2.indexOf(" ");
+                            int ID = Integer.parseInt(remain2.substring(0, space2));
+                            String fileName = remain2.substring(space2+1);
+                            frame.askPriFile(ID, fileName);
                         }
-                        //send file to client
-                        else if (remain.startsWith("-r")){
-                            
+                        //recieve file
+                        else if (remain.startsWith("-r")) {
+                            recFile(remain.substring(3));
                         }
                     }
                     else if (msg.startsWith("/nrm")) {
@@ -179,6 +196,9 @@ public class cClient implements Runnable{
                     else if (msg.startsWith("/npr")) {
                         int talkTo = Integer.parseInt(msg.substring(5));
                         frame.newPrivM(talkTo);
+                    }
+                    else if (msg.startsWith("/!")) {
+                        frame.shakePriv(Integer.parseInt(msg.substring(3)));
                     }
                     else {
 			reconnect();
@@ -337,11 +357,11 @@ public class cClient implements Runnable{
                   int space3 = remain2.indexOf(" ");
                   String from = remain2.substring(0,space3);
                   String msg = remain2.substring(space3+1);
-                  frame.roomChat(Integer.parseInt(ID), from, msg);
+                  frame.roomChat("t", Integer.parseInt(ID), from, msg);
               }
               else if (mode.equals("-w")) {
                   String msg = remain1.substring(space2+1);
-                  frame.privateChat(Integer.parseInt(ID),msg);
+                  frame.privateChat("t",Integer.parseInt(ID),msg);
               }
               
             
@@ -353,6 +373,61 @@ public class cClient implements Runnable{
             frame.disTxt(from, msgOnB);*/
         }
         
+        public void recPIcon(String tx) {
+            int space1 = tx.indexOf(" ");
+              String mode = tx.substring(0,space1);
+              String remain1 = tx.substring(space1+1);
+              int space2 = remain1.indexOf(" ");
+              String ID = remain1.substring(0,space2);
+              if (mode.equals("-b")) {
+                  String remain2 = remain1.substring(space2+1);
+                  int space3 = remain2.indexOf(" ");
+                  String from = remain2.substring(0,space3);
+                  String msg = remain2.substring(space3+1);
+                  frame.roomChat("p", Integer.parseInt(ID), from, msg);
+              }
+              else if (mode.equals("-w")) {
+                  String msg = remain1.substring(space2+1);
+                  frame.privateChat("p", Integer.parseInt(ID),msg);
+              }
+            
+        }
         
+        public void recFile(String tx) {
+            try {
+                int fileLength = Integer.parseInt(tx.substring(0,tx.indexOf(" ")));
+                String fileName = tx.substring(tx.indexOf(" ")+1);
+            
+                BufferedInputStream inputStream = new BufferedInputStream(socket.getInputStream());
+                //BufferedInputStream inputStream = new BufferedInputStream(input);
+                 BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(DEFAULT_FILE_PATH +fileName));
+                                          
+                 int readin;
+                /* while((readin = inputStream.read()) != -1) {
+                    outputStream.write(readin);
+                    Thread.yield();
+                 }*/
+                 int count = 0;
+                 while (count<fileLength) {
+                     readin = inputStream.read();
+                     outputStream.write(readin);
+                     count++;
+                     Thread.yield();
+                 }
+                                            
+                 outputStream.flush();
+                 outputStream.close();
+                 //inputStream.close();
+                                            
+                 //sock.close();
+                                            
+                 System.out.println("recieving completed!");
+                
+                
+            } catch (IOException e) {
+			System.out.println(e.toString());
+			e.printStackTrace();
+		}
+        }
 	
 }

@@ -9,6 +9,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Toolkit;
 
 import javax.swing.ImageIcon;
@@ -38,6 +39,7 @@ import conn.cClient;
 
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
+import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;
 import javax.swing.event.ChangeListener;
@@ -55,6 +57,7 @@ public class mainFram extends JFrame {
 	private JScrollPane scrollPane;
 	private JScrollPane scrollPane_1;
 	private JPanel panel_2;
+	private JLabel lblNewLabel;
 	public JPanel allOnline;
         HashMap<Integer, privateMessage> PM = new HashMap<Integer, privateMessage> ();
 	//ector<privateMessage> PM = new Vector<privateMessage>();
@@ -232,13 +235,9 @@ public class mainFram extends JFrame {
 		stickers.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 				JPopupMenu tmpMenu = new JPopupMenu();
-				for(int i = 1; i < 7; ++i){
+				for(int i = 1; i < 7; ++i) {
 					JMenuItem tmp = new JMenuItem(new ImageIcon(mainFram.class.getResource("/Icon/emotion" + i + "-key.png")));
-					tmp.addActionListener(new ActionListener(){
-						public void actionPerformed(ActionEvent e){
-							//send stickers by cClient
-						}
-					});
+                                        tmp.addActionListener(new stickerButton(i));
 					tmpMenu.add(tmp);
 				}
 				tmpMenu.show(panel_2,10,9);
@@ -247,6 +246,17 @@ public class mainFram extends JFrame {
 		});
 //>>>>>>> b0232f44beab8a60b82263dc330c8471369a5945
 		panel_2.add(stickers);
+		
+		JButton shake = new JButton(new ImageIcon(mainFram.class.getResource("/Icon/vibrate.png")));
+		shake.setBounds(105, 9, 23, 23);
+		shake.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				shake();
+                                //int ID = ((chatroomPane)tabbedPane.getSelectedComponent()).getChrID();
+                                //theClient.sendPMsg("/shake -b "+ID);
+			}
+		});
+		panel_2.add(shake);
 		
 		userNameLabel = new JLabel("");
 		userNameLabel.setBounds(255, 9, 105, 17);
@@ -257,8 +267,35 @@ public class mainFram extends JFrame {
 		panel_6.setBounds(370, 9, 76, 76);
 		panel_2.add(panel_6);
 		
-		JLabel lblNewLabel = new JLabel("");
+		lblNewLabel = new JLabel("");
 		lblNewLabel.setIcon(new ImageIcon(mainFram.class.getResource("/Icon/notSetFace.png")));
+		lblNewLabel.addMouseListener(new MouseAdapter(){
+			public void mouseClicked(MouseEvent e){
+				String fileName = "";
+				File file = new File("");
+				
+				JFileChooser fcObj = new JFileChooser("./");
+				int result = -1;
+				fcObj.setDialogTitle("選擇圖片");
+				result = fcObj.showOpenDialog(lblNewLabel);
+				if(result == JFileChooser.APPROVE_OPTION){
+					file = fcObj.getSelectedFile();
+					ImageIcon imageIcon = new ImageIcon(file.getAbsolutePath());
+					Image image = imageIcon.getImage();
+					int scaledH,scaledW;
+					if((imageIcon.getIconWidth()-76) > (imageIcon.getIconHeight()-76)){
+						scaledH = 76;
+						scaledW = imageIcon.getIconWidth()/(imageIcon.getIconHeight()/scaledH);
+					}
+					else{
+						scaledW = 76;
+						scaledH = imageIcon.getIconHeight()/(imageIcon.getIconWidth()/scaledW);
+					}
+					Image newimg = image.getScaledInstance(scaledW, scaledH,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+					lblNewLabel.setIcon(imageIcon = new ImageIcon(newimg));
+				}
+			}
+		});
 		panel_6.add(lblNewLabel);
 		
 		textField_2.addKeyListener(new checktypeListener());
@@ -275,7 +312,7 @@ public class mainFram extends JFrame {
         
          //////display///////
         //display chat content
-        public void roomChat (int roomID, String from, String msg) {
+        public void roomChat (String type, int roomID, String from, String msg) {
             //JTextPane tmp = new JTextPane();
             JLabel tmp = new JLabel();
             tmp.setText(from + ":" + msg);
@@ -283,19 +320,21 @@ public class mainFram extends JFrame {
            // chatBoardPane.add(tmp);
             //chatBoardPane.validate();
             //System.out.println("here");
-            
+           
             for (Integer key: ChR.keySet()) {
                 if (roomID == key) {
-                    (ChR.get(key)).displaychats(from, msg);
+                    (ChR.get(key)).displaychats(type, from, msg);
                     tabbedPane.setSelectedComponent(ChR.get(key));
+                    break;
                     //(ChR.get(key)).add(tmp);
                     //(ChR.get(key)).validate();
                 }
             }
+
             
         }
         
-        public void privateChat (int fromID, String msg) {
+        public void privateChat (String type, int fromID, String msg) {
             JLabel tmp = new JLabel();
             String from = theClient.getPrivateName(fromID);
             tmp.setText(from + ":" + msg);
@@ -303,7 +342,7 @@ public class mainFram extends JFrame {
                 if (fromID == key) {
                     //(PM.get(key)).add(tmp);
                     //(PM.get(key)).validate();
-                    (PM.get(key)).displaychats(from, msg);
+                    (PM.get(key)).displaychats(type, from, msg);
                 }
             }
         }
@@ -325,6 +364,33 @@ public class mainFram extends JFrame {
 		System.out.println("Alert: "+alertMsg);
 	}
         
+        public void shakePriv(int talkTo) {
+            for (Integer key : PM.keySet()) {
+                if (key == talkTo) {
+                    (PM.get(key)).shake();
+                }
+            }
+            
+        }
+	
+	private void shake(){
+		try{
+			int originalX = mainFram.this.getLocationOnScreen().x;
+			int originalY = mainFram.this.getLocationOnScreen().y;
+			for(int i = 0; i < 10; ++i){
+				Thread.sleep(10);
+				mainFram.this.setLocation(originalX, originalY+5);
+				Thread.sleep(10);
+				mainFram.this.setLocation(originalX, originalY-5);
+				Thread.sleep(10);
+				mainFram.this.setLocation(originalX+5, originalY);
+				Thread.sleep(10);
+				mainFram.this.setLocation(originalX, originalY);
+			}
+		}catch(Exception err){
+			err.printStackTrace();
+		}
+	}
         /////helper functions/////
         public void newChR (int roomID, String rName, String mems) {
             String[] splMem = mems.split(" ");
@@ -344,6 +410,14 @@ public class mainFram extends JFrame {
             privateMessage newprivateMessage = new privateMessage(theClient, talkTo);
             newprivateMessage.setVisible(true);
             PM.put(talkTo, newprivateMessage);
+        }
+        
+        public void askPriFile(int rec, String fileName) { 
+            for (Integer key: PM.keySet()) {
+                if (key == rec) {
+                    (PM.get(key)).askFile(theClient.getPrivateName(rec), fileName);
+                }
+            }
         }
 	
 	class checktypeListener extends KeyAdapter{
@@ -467,20 +541,40 @@ public class mainFram extends JFrame {
 		public void mouseReleased(MouseEvent arg0) {}
 
 	}
+        class stickerButton implements ActionListener{
+            int i;
+            stickerButton(int tmp){
+                i = tmp;
+            }
+            public void actionPerformed(ActionEvent e){
+		int rID = ((chatroomPane)tabbedPane.getSelectedComponent()).getChrID();
+                for (Integer key: ChR.keySet()) {
+                    if (rID == key) {
+                        (ChR.get(key)).displaychats("p", theClient.getUserName(), Integer.toString(i));
+                        tabbedPane.setSelectedComponent(ChR.get(key));
+                        break;
+                    }
+                }
+		theClient.sendPMsg("/p -b " + rID + " "+ i);				
+        }
+        }
 	class addtabButton implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			Vector connection = newChatroom.showDialog(theClient.getAllOnline(), mainFram.this, "Create new room");
-//<<<<<<< HEAD
-//			JPanel tmpPan = new JPanel();
-//			tablabel tmp = new tablabel((String)connection.get(0), tmpPan);
-//			tabbedPane.add(tmpPan, tabbedPane.getTabCount()-1);
-//			tabbedPane.setTabComponentAt(tabbedPane.indexOfComponent(tmpPan), tmp);
-//=======
-			/*chatroomPane newChatroomPane = new chatroomPane((String)connection.get(0));
-			tablabel tmp = new tablabel((String)connection.get(0), newChatroomPane);
-			tabbedPane.add(newChatroomPane, tabbedPane.getTabCount()-1);
-			tabbedPane.setTabComponentAt(tabbedPane.indexOfComponent(newChatroomPane), tmp);*/
-//>>>>>>> b0232f44beab8a60b82263dc330c8471369a5945
+            String frd = new String("");
+            //tmpChrName = (String)connection.get(0);
+            Vector<String> vS = ((Vector<String>)connection.get(1));
+            Vector<Integer> vI = new Vector<Integer>();
+            for (String i :vS) {
+                vI.add(theClient.getPrivateID(i));
+		}
+            vI.add(theClient.getUserID());
+            Collections.sort(vI);
+            for (Integer i :vI) {
+                frd+=" ";
+                frd+=i;
+	}
+            theClient.sendPMsg("/nrm "+ (String)connection.get(0)+ frd);
 		}
 	}
 	class snedButton implements ActionListener{
@@ -489,6 +583,7 @@ public class mainFram extends JFrame {
                             return;
                         //default in lobby
                         int ID = ((chatroomPane)tabbedPane.getSelectedComponent()).getChrID();
+                        (ChR.get(ID)).displaychats("t", theClient.getUserName(), textField_2.getText());
 			theClient.sendPMsg("/t -b " + ID + " " + textField_2.getText());
 			textField_2.setText("");
 			btnNewButton_1.setEnabled(false);
