@@ -166,7 +166,7 @@ public class MainRecorder implements Runnable {
 		toIPAddress = Tipa;
 
 		// open sound
-		soundRecorder = new SoundRecorderMain();
+		soundRecorder = new SoundRecorderMain(toIPAddress);
 		theSoundRecorderThread = new Thread(soundRecorder);
 		theSoundRecorderThread.start();
 

@@ -18,11 +18,11 @@ import soundReceiveByUDP.SoundReceiverMain;
 
 public class SoundRecorderMain implements Runnable {
 
-	private static final String IP_TO_STREAM_TO = "localhost";
+	private final String IP_TO_STREAM_TO;
 	private static final int PORT_TO_STREAM_TO = 8888;
 	DatagramSocket theSocket;
 	SoundReceiverMain r;
-
+	
 	TargetDataLine targetDataLine;
 	DataLine.Info dataLineInfo;
 
@@ -30,8 +30,10 @@ public class SoundRecorderMain implements Runnable {
 	boolean threadRunningIndicator = true;
 
 	/** Creates a new instance of SoundRecorderMain */
-	public SoundRecorderMain() {
-
+	public SoundRecorderMain(String tipa) {
+		
+		IP_TO_STREAM_TO = tipa;
+		
 		// Open Sound Receiver
 		r = new SoundReceiverMain();
 		r.start();
@@ -52,10 +54,8 @@ public class SoundRecorderMain implements Runnable {
 		if (AudioSystem.isLineSupported(Port.Info.MICROPHONE)) {
 			try {
 
-				dataLineInfo = new DataLine.Info(TargetDataLine.class,
-						getAudioFormat());
-				targetDataLine = (TargetDataLine) AudioSystem
-						.getLine(dataLineInfo);
+				dataLineInfo = new DataLine.Info(TargetDataLine.class, getAudioFormat());
+				targetDataLine = (TargetDataLine) AudioSystem.getLine(dataLineInfo);
 				targetDataLine.open(getAudioFormat());
 				targetDataLine.start();
 
@@ -86,14 +86,13 @@ public class SoundRecorderMain implements Runnable {
 		// true,false
 		boolean bigEndian = false;
 		// true,false
-		return new AudioFormat(sampleRate, sampleSizeInBits, channels, signed,
-				bigEndian);
+		return new AudioFormat(sampleRate, sampleSizeInBits, channels, signed, bigEndian);
 	}
 
 	public void sendThruUDP(byte soundpacket[]) {
 		try {
-			theSocket.send(new DatagramPacket(soundpacket, soundpacket.length,
-					InetAddress.getByName(IP_TO_STREAM_TO), PORT_TO_STREAM_TO));
+			theSocket.send(new DatagramPacket(soundpacket, soundpacket.length, InetAddress
+					.getByName(IP_TO_STREAM_TO), PORT_TO_STREAM_TO));
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println(" Unable to send soundpacket using UDP ");
@@ -129,7 +128,7 @@ public class SoundRecorderMain implements Runnable {
 	public void resumeSoundRecord() {
 		soundRecordIndicator = true;
 	}
-	
+
 	public void closeTheThread() {
 		threadRunningIndicator = false;
 	}
