@@ -51,6 +51,7 @@ public class videoDialog extends JDialog {
 				okButton.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
+						dispose();
 						theClient.replyVideoRequest(talkToID, true, toIPAddress);
 					}
 				});
@@ -63,6 +64,7 @@ public class videoDialog extends JDialog {
 				cancelButton.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
+						dispose();
 						theClient.replyVideoRequest(talkToID, false, "");
 					}
 				});
