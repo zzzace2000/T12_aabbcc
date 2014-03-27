@@ -384,7 +384,7 @@ public class cClient implements Runnable {
 	}
 	
 	public void startVideoTalk(String ToIPAddress) {
-		new MainRecorder(ToIPAddress);
+		new Thread(new MainRecorder(ToIPAddress)).start();
 	}
 	
 	private String getLocalAddress() {
