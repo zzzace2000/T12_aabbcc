@@ -1,20 +1,26 @@
 package GUI;
 
 import javax.swing.*;
+
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.util.Vector;
+
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+
 import java.awt.Toolkit;
+
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
 import javax.swing.ImageIcon;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.util.Collections;
@@ -25,10 +31,11 @@ public class newChatroom extends JDialog {
         private final JPanel contentPanel = new JPanel();
 	private JTextField textField;
 	private JTable table;
-        private JPanel frdPane;
 	private Vector values = new Vector(); //first element is chatroom name, second element is friend list
         private Vector<String> rmFrd = new Vector<String>();
 	private JLabel lblNewLabel;
+	private JTable friendTable;
+	private DefaultTableModel addFriend;
         
 
 	/**
@@ -63,28 +70,43 @@ public class newChatroom extends JDialog {
                 friendBox.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e){
                        JComboBox selFrd = (JComboBox)e.getSource();
-                       String frd = (String)selFrd.getSelectedItem(); 
-                       frdPane.add(new JLabel(frd));
-                       rmFrd.add(frd);
-                       frdPane.validate();
+                       String frd = (String)selFrd.getSelectedItem();
+                       boolean addFlag = true;
+                       for(int i = 0; i < rmFrd.size(); ++i){
+                    	   if(rmFrd.get(i).equals(frd)){
+                    		   addFlag = false;
+                    		   break;
+                    	   }
+                       }
+                       if(addFlag){
+                    	   rmFrd.add(frd);
+                    	   addFriend.addRow(new Object[]{frd});
+                       }
                     }
                 });
 		
-		JButton btnNewButton = new JButton("add");
-		btnNewButton.setBounds(137, 61, 89, 23);
-		contentPanel.add(btnNewButton);
-		
 		JButton btnNewButton_1 = new JButton("delete");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(friendTable.getSelectedRow() < 0)
+					return;
+				Object selectedObject = (Object)friendTable.getValueAt(friendTable.getSelectedRow(),0);
+				String tmp = (String)selectedObject;
+				addFriend.removeRow(friendTable.getSelectedRow());
+				rmFrd.remove(tmp);
+			}
+		});
 		btnNewButton_1.setBounds(137, 94, 89, 23);
 		contentPanel.add(btnNewButton_1);
 		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 93, 117, 121);
-		contentPanel.add(scrollPane);
+		JScrollPane friendScrollPane = new JScrollPane();
+		friendScrollPane.setBounds(10, 93, 117, 121);
+		contentPanel.add(friendScrollPane);
 		
-		//table = new JTable();
-                frdPane = new JPanel();
-		scrollPane.setViewportView(frdPane);
+        addFriend = new DefaultTableModel();
+		addFriend.addColumn("加入");
+		friendTable = new JTable(addFriend);
+		friendScrollPane.setViewportView(friendTable);
 		
 		JButton btnNewButton_2 = new JButton("Create");
 		btnNewButton_2.addActionListener(new addListener());
@@ -140,6 +162,4 @@ public class newChatroom extends JDialog {
 		}
 		return false;
 	}
-        
-        
 }
