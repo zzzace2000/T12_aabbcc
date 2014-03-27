@@ -399,7 +399,7 @@ public class cClient implements Runnable {
 
 	public void replyVideoRequest(int talkToID, boolean accept, String ToIPAddress) {
 		if (accept) {
-			sendPMsg("/v -r y "+talkToID+" "+ToIPAddress);
+			sendPMsg("/v -r y "+talkToID+" "+LOCAL_IP_ADDRESS);
 			startVideoTalk(ToIPAddress);
 		}
 		else {
@@ -408,7 +408,7 @@ public class cClient implements Runnable {
 	}
 	
 	public void startVideoTalk(String ToIPAddress) {
-		new MainRecorder(ToIPAddress);
+		new Thread(new MainRecorder(ToIPAddress)).start();
 	}
 	
 	private String getLocalAddress() {

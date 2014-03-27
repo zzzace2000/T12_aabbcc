@@ -95,7 +95,8 @@ class FaceDetector {
 		if (face_cascade.empty()) {
 			System.out.println("--(!)Error loading A\n");
 			return;
-		} else {
+		}
+		else {
 			System.out.println("Face classifier loooaaaaaded up");
 		}
 	}
@@ -109,11 +110,9 @@ class FaceDetector {
 		Imgproc.cvtColor(mRgba, mGrey, Imgproc.COLOR_BGR2GRAY);
 		Imgproc.equalizeHist(mGrey, mGrey);
 		face_cascade.detectMultiScale(mGrey, faces);
-		System.out.println(String.format("Detected %s faces",
-				faces.toArray().length));
+		System.out.println(String.format("Detected %s faces", faces.toArray().length));
 		for (Rect rect : faces.toArray()) {
-			Point center = new Point(rect.x + rect.width * 0.5, rect.y
-					+ rect.height * 0.5);
+			Point center = new Point(rect.x + rect.width * 0.5, rect.y + rect.height * 0.5);
 			Core.rectangle(mRgba, // where to draw the box
 					new Point(rect.x, rect.y), // bottom left
 					new Point(rect.x + rect.width, rect.y + rect.height), // top
@@ -128,21 +127,27 @@ class FaceDetector {
 	}
 }
 
-public class MainRecorder {
+public class MainRecorder implements Runnable {
 
 	LinkedList<BufferedImage> imageBuffer = new LinkedList<BufferedImage>();
 	boolean imageIsNotSent = false;
 	public int ViewMode = 1; // 1 from webcam. 2 from desktop
-	
+
 	receiver theReceiver;
 	videoFrame video;
 	public sendImage child;
-	
+	VideoCapture webCam;
+	Mat webcam_image;
+	Graphics2D graphics2D;
 	boolean closeThreadIndicator = false;
-	
+	Robot robot;
+	Rectangle screenRect;
+
+	String toIPAddress;
+
 	// sound
 	public SoundRecorderMain soundRecorder;
-	
+
 	Thread theReceiverThread;
 	Thread theThread;
 	Thread theSoundRecorderThread;
@@ -152,101 +157,38 @@ public class MainRecorder {
 		new MainRecorder("localhost");
 	}
 
-	public MainRecorder(String ToIPAddress) {
+	public MainRecorder(String Tipa) {
 		// Load the native library.
 
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 		// or ... System.loadLibrary("opencv_java244");
-		
+
+		toIPAddress = Tipa;
+
 		// open sound
 		soundRecorder = new SoundRecorderMain();
 		theSoundRecorderThread = new Thread(soundRecorder);
 		theSoundRecorderThread.start();
-		
-		
+
 		// make the JFrame
 		video = new videoFrame(this);
 		video.setVisible(true);
-		
+
 		FaceDetector faceDetector = new FaceDetector();
-		
+
 		// Open and Read from the video stream
-		Mat webcam_image = new Mat();
-		VideoCapture webCam = new VideoCapture(0);
-		Graphics2D graphics2D;
-		
+		webcam_image = new Mat();
+		webCam = new VideoCapture(0);
+
 		// Initialize received thread
 		theReceiver = new receiver(video);
 		theReceiverThread = new Thread(theReceiver);
 		theReceiverThread.start();
-		
+
 		try {
-			Robot robot = new Robot();
-			Rectangle screenRect = new Rectangle(Toolkit.getDefaultToolkit()
-					.getScreenSize());
+			robot = new Robot();
+			screenRect = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
 
-			if (webCam.isOpened()) {
-				Thread.sleep(1000);
-
-				child = new sendImage(this, ToIPAddress);
-				theThread = new Thread(child);
-				theThread.start();
-
-				while (!closeThreadIndicator) {
-					// ==== Webcam mode ====//
-					if (ViewMode == 1) {
-						webCam.read(webcam_image);
-						System.out.println("Catch an image!");
-
-						if (!webcam_image.empty()) {
-
-							MatOfByte mb = new MatOfByte();
-							Highgui.imencode(".jpg", webcam_image, mb);
-
-							BufferedImage image = ImageIO
-									.read(new ByteArrayInputStream(mb.toArray()));
-
-							imageBuffer.add(image);
-							
-							video.showImage(image);
-							
-						} else {
-							System.out.println(" --(!) No captured frame from webcam !");
-							webCam.release(); // release the webcam
-							return;
-						}
-					} else if (ViewMode == 2) {
-						BufferedImage capture = robot.createScreenCapture(screenRect);
-						int width = 600;
-						int height = (int) Math.floor(width
-								* capture.getHeight() / capture.getWidth());
-						// Create new (blank) image of required (scaled) size
-
-						BufferedImage scaledImage = new BufferedImage(width,
-								height, BufferedImage.TYPE_INT_ARGB);
-
-						// Paint scaled version of image to new image
-
-						graphics2D = scaledImage.createGraphics();
-						graphics2D.setRenderingHint(
-								RenderingHints.KEY_INTERPOLATION,
-								RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-						graphics2D
-								.drawImage(capture, 0, 0, width, height, null);
-
-						imageBuffer.add(scaledImage);
-						video.showImage(scaledImage);
-
-					}
-
-				} // while
-
-			}
-		} catch (InterruptedException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
 		} catch (AWTException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -262,4 +204,68 @@ public class MainRecorder {
 		closeThreadIndicator = true;
 	}
 
+	@Override
+	public void run() {
+		try {
+		if (webCam.isOpened()) {
+			Thread.sleep(1000);
+
+			child = new sendImage(this, toIPAddress);
+			theThread = new Thread(child);
+			theThread.start();
+
+			while (!closeThreadIndicator) {
+				// ==== Webcam mode ====//
+				if (ViewMode == 1) {
+					webCam.read(webcam_image);
+					System.out.println("Catch an image!");
+
+					if (!webcam_image.empty()) {
+
+						MatOfByte mb = new MatOfByte();
+						Highgui.imencode(".jpg", webcam_image, mb);
+
+						BufferedImage image = ImageIO
+								.read(new ByteArrayInputStream(mb.toArray()));
+
+						imageBuffer.add(image);
+						
+						video.showImage(image);
+						
+					} else {
+						System.out.println(" --(!) No captured frame from webcam !");
+						webCam.release(); // release the webcam
+						return;
+					}
+				} else if (ViewMode == 2) {
+					BufferedImage capture = robot.createScreenCapture(screenRect);
+					int width = 600;
+					int height = (int) Math.floor(width
+							* capture.getHeight() / capture.getWidth());
+					// Create new (blank) image of required (scaled) size
+
+					BufferedImage scaledImage = new BufferedImage(width,
+							height, BufferedImage.TYPE_INT_ARGB);
+
+					// Paint scaled version of image to new image
+
+					graphics2D = scaledImage.createGraphics();
+					graphics2D.setRenderingHint(
+							RenderingHints.KEY_INTERPOLATION,
+							RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+					graphics2D
+							.drawImage(capture, 0, 0, width, height, null);
+
+					imageBuffer.add(scaledImage);
+					video.showImage(scaledImage);
+
+				}
+
+			} // while
+
+		}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

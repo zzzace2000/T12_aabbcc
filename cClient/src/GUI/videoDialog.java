@@ -21,15 +21,15 @@ public class videoDialog extends JDialog {
 	private final JPanel contentPanel = new JPanel();
 	private cClient theClient;
 	private int talkToID;
-	private String toIPAddress;
+	private String fromIPAddress;
 	/**
 	 * Create the dialog.
 	 */
-	public videoDialog(JFrame parent, String title, cClient cc, int ttID, String fromIPAddress) {
+	public videoDialog(JFrame parent, String title, cClient cc, int ttID, String fIPA) {
 		super(parent, title, true);
 		theClient = cc;
 		talkToID = ttID;
-		toIPAddress = fromIPAddress;
+		fromIPAddress = fromIPAddress;
 		
 		setResizable(false);
 		setBounds(100, 100, 173, 151);
@@ -51,7 +51,8 @@ public class videoDialog extends JDialog {
 				okButton.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
-						theClient.replyVideoRequest(talkToID, true, toIPAddress);
+						dispose();
+						theClient.replyVideoRequest(talkToID, true, fromIPAddress);
 					}
 				});
 				okButton.setActionCommand("OK");
@@ -63,6 +64,7 @@ public class videoDialog extends JDialog {
 				cancelButton.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
+						dispose();
 						theClient.replyVideoRequest(talkToID, false, "");
 					}
 				});
