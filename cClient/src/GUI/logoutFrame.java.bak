@@ -46,7 +46,6 @@ public class logoutFrame extends JDialog {
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
 						//implement logout, remember to call variable theClient
-                                                theClient.logOut();
 						logoutFrame.this.dispose();
 					}
 				});

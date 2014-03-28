@@ -82,11 +82,14 @@ public class cServer {
 			Vector ret = new Vector();
 			return false;
 		} else {
-			for (Integer n : chrmList.get(0)) {
-				if (n == ID) {
-					return true;
-				}
-			}
+                    for (Integer key: conn_client.keySet()) {
+                        if (((conn_client.get(key)).getUserName()) != null) {
+                            if (((conn_client.get(key)).getUserName()).equals(name)) {
+                                return true;
+                            }
+                        }
+                }
+			
 			(chrmList.get(0)).add(ID);
 			return false;
 		}
@@ -130,15 +133,25 @@ public class cServer {
 	// tell all clients that a new member has joined in
 	public String getAllOnl(int self) {
 		String allO = new String("");
-		for (Integer key : conn_client.keySet()) {
-			if (self != key) {
-				allO += " ";
-				allO += key;
-				allO += "_";
-				allO += ((conn_client.get(key)).getUserName());
+            for (Integer key: conn_client.keySet()) {
+                if ((conn_client.get(key)).getUserName() != null) {
+                    if (self != key){
+                        allO+=" ";
+                        allO+=key;
+                        allO+="_";
+                        allO+=((conn_client.get(key)).getUserName());
 			}
 		}
+            }
 		return allO;
+	}
+	
+	public void removeClient(int removeID) {
+		for (Integer key : conn_client.keySet()) {
+			if (key == removeID) {
+				conn_client.remove(key);
+			}
+		}
 	}
 
 	public void synNewMem(int newOID, String newOName) {
@@ -151,9 +164,20 @@ public class cServer {
 				(conn_client.get(key))
 						.sendPMsg("/o " + newOID + "_" + newOName);
 			}
+
 		}
 		serverFrame.disFrd(newOName);
 	}
+        
+        public void synMemLeave(int leaveID) {
+            for (Integer key : conn_client.keySet()) {
+			if (key != leaveID) {
+				(conn_client.get(key))
+						.sendPMsg("/d " + leaveID);
+			}
+		}
+            
+        }
 
 	public void synNewRoom(int roomID, String roomName, String mems) {
 		/*
@@ -166,7 +190,7 @@ public class cServer {
 			for (Integer i : chrmList.get(roomID)) {
 				if (i == key) {
 					(conn_client.get(key)).sendPMsg("/nrm -a " + roomID + "_"
-							+ roomName + " " + mems);
+							+ roomName +" "+ mems);
 				}
 			}
 		}

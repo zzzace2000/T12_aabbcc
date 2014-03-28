@@ -118,7 +118,11 @@ System.out.println("in judge: "+ msg);
 				else {
 					// sendPMsg("/nrm -n "+ ((int)vs.get(1)) + " " +
 					// msg.substring(5));
-					mainServer.synNewRoom(((int) vs.get(1)), roomName, msg.substring(5));
+                                    String remain1 = msg.substring(5);
+                                    int space1 = remain1.indexOf(" ");
+                                    String mems = remain1.substring(space1+1);
+                                    System.out.println("mems :"+mems+"aa");
+                                    mainServer.synNewRoom(((int) vs.get(1)), roomName, mems);
 				}
 			}
             else if (msg.startsWith("/npr")) {
@@ -128,6 +132,10 @@ System.out.println("in judge: "+ msg);
             else if (msg.startsWith("/!")) {
                 int toID = Integer.parseInt(msg.substring(3));
                 mainServer.whisShake(toID, userID);
+            }
+            else if (msg.startsWith("/d")) {
+            	mainServer.removeClient(userID);
+                mainServer.synMemLeave(userID);
             }
 			else if (msg.startsWith("/v")) {
 				String[] tmp = msg.split(" ");

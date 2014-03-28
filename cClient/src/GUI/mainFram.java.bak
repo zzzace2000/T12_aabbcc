@@ -131,7 +131,6 @@ public class mainFram extends JFrame {
 		
 		thisChatroomOnline = new JPanel();
 		thisChatroomOnline.setBackground(Color.WHITE);
-                thisChatroomOnline.setLayout(new BoxLayout(thisChatroomOnline, BoxLayout.Y_AXIS));
 		scrollPane_1.setViewportView(thisChatroomOnline);
 		
 		JPanel panel_5 = new JPanel();
@@ -171,16 +170,14 @@ public class mainFram extends JFrame {
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
-				chatroomPane tmp = (chatroomPane)(tabbedPane.getSelectedComponent());
+				/*chatroomPane tmp = (chatroomPane)(tabbedPane.getSelectedComponent());
 				thisChatroomOnline.removeAll();
 				Vector<String> tmpName = tmp.members;
 				for(int i = 0; i < tmpName.size(); ++i){
-                                    if (Integer.parseInt(tmpName.get(i)) != theClient.getUserID()) {
-					onlineLabel tmpLabel = new onlineLabel(theClient.getPrivateName(Integer.parseInt(tmpName.get(i))));
+					JLabel tmpLabel = new JLabel(tmpName.get(i));
 					thisChatroomOnline.add(tmpLabel);
-                                    }
 				}
-				thisChatroomOnline.validate();
+				thisChatroomOnline.validate();*/
 			}
 		});
 		tabbedPane.setBounds(0, 0, 458, 269);
@@ -251,17 +248,6 @@ public class mainFram extends JFrame {
 			
 		});
 		panel_2.add(stickers);
-		
-		JButton shake = new JButton(new ImageIcon(mainFram.class.getResource("/Icon/vibrate.png")));
-		shake.setBounds(105, 9, 23, 23);
-		shake.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				shake();
-                                //int ID = ((chatroomPane)tabbedPane.getSelectedComponent()).getChrID();
-                                //theClient.sendPMsg("/shake -b "+ID);
-			}
-		});
-		panel_2.add(shake);
 		
 		userNameLabel = new JLabel("");
 		userNameLabel.setBounds(255, 9, 105, 17);
@@ -369,19 +355,6 @@ public class mainFram extends JFrame {
 			allOnline.add(tmp);
 			allOnline.validate();
 			scrollPane.validate();
-        }
-        
-        public void updateFrd (HashMap<Integer, String> OL) {
-            allOnline.removeAll();
-            for (Integer key : OL.keySet()){
-                onlineLabel tmp = new onlineLabel(OL.get(key));
-                allOnline.add(tmp);			
-            }
-            //mainFram.this.revalidate();
-            allOnline.repaint();
-			scrollPane.revalidate();
-            
-            
         }
 	public static void showAlertDialog(String alertMsg) {
 		// Write a pump up dialog that shows some alerts
